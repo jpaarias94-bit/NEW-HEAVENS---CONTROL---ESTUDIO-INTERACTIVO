@@ -1,0 +1,710 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700&family=Quicksand:wght@600;700&display=swap" rel="stylesheet"/>
+<style>
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'Segoe UI',system-ui,sans-serif;background:#f4f6fb;color:#1a2233;padding:16px;line-height:1.4;}
+header.apphead{background:linear-gradient(120deg,#1a73e8,#0b3d91);color:#fff;padding:20px 24px;border-radius:16px;margin-bottom:18px;box-shadow:0 4px 14px rgba(11,61,145,.25);}
+header.apphead h1{font-size:22px;}
+header.apphead p{opacity:.9;font-size:14px;margin-top:4px;}
+.tabs{display:flex;gap:8px;margin-bottom:16px;flex-wrap:wrap;}
+.tab{padding:10px 18px;border-radius:30px;border:none;cursor:pointer;background:#fff;color:#1a2233;font-size:14px;font-weight:600;box-shadow:0 2px 6px rgba(0,0,0,.06);transition:.2s;position:relative;}
+.tab.active{background:#1a73e8;color:#fff;}
+.tab .pip{position:absolute;top:-4px;right:-4px;background:#e5484d;color:#fff;font-size:10px;font-weight:700;min-width:18px;height:18px;border-radius:9px;display:flex;align-items:center;justify-content:center;padding:0 4px;}
+.panel{display:none;}
+.panel.active{display:block;animation:fade .3s;}
+@keyframes fade{from{opacity:0;transform:translateY(6px);}to{opacity:1;}}
+.card{background:#fff;border-radius:14px;padding:16px;margin-bottom:12px;box-shadow:0 2px 8px rgba(0,0,0,.05);border-left:6px solid #1a73e8;}
+.card h3{font-size:16px;margin-bottom:4px;}
+.meta{font-size:13px;color:#5a6478;margin:2px 0;}
+.badge{display:inline-block;padding:3px 10px;border-radius:20px;font-size:12px;font-weight:700;color:#fff;margin-right:6px;}
+.verde{background:#22a06b;}.amarillo{background:#e8a800;}.rojo{background:#e5484d;}
+.gris{background:#8894a8;}.movida{background:#c026d3;}.susp{background:#5f6b7a;}
+.dias{font-weight:800;font-size:15px;}
+.empty{text-align:center;color:#8894a8;padding:30px;}
+.refresh{background:#fff;border:none;padding:8px 16px;border-radius:20px;cursor:pointer;font-weight:600;color:#1a73e8;box-shadow:0 2px 6px rgba(0,0,0,.08);}
+.toprow{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;gap:8px;flex-wrap:wrap;}
+.filtro{padding:8px 12px;border-radius:10px;border:1px solid #d4dae6;font-size:14px;}
+.cal-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;}
+.cal-head h2{font-size:18px;font-family:'Quicksand',sans-serif;}
+.cal-nav{background:#eef1f7;border:none;border-radius:10px;width:36px;height:36px;font-size:18px;cursor:pointer;}
+.cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:6px;}
+.cal-dow{text-align:center;font-size:12px;font-weight:700;color:#8894a8;padding:4px 0;}
+.cal-cell{background:#fff;border-radius:10px;min-height:64px;padding:6px;cursor:pointer;border:2px solid transparent;position:relative;transition:.15s;}
+.cal-cell:hover{border-color:#1a73e8;}
+.cal-cell.empty-cell{background:transparent;cursor:default;}
+.cal-cell.selected{border-color:#1a73e8;background:#eaf1fe;}
+.cal-cell.tienemov{box-shadow:inset 0 0 0 2px #c026d3;}
+.cal-num{font-size:13px;font-weight:600;}
+.cal-dots{display:flex;flex-wrap:wrap;gap:3px;margin-top:4px;}
+.cal-dot{width:7px;height:7px;border-radius:50%;background:#1a73e8;}
+.cal-today .cal-num{background:#1a73e8;color:#fff;border-radius:50%;width:22px;height:22px;display:inline-flex;align-items:center;justify-content:center;}
+.day-title{font-size:15px;font-weight:700;margin:16px 0 8px;}
+.mail{background:#fff;border-radius:14px;padding:14px;margin-bottom:10px;box-shadow:0 2px 8px rgba(0,0,0,.05);border-left:6px solid #1a73e8;}
+.mail .asig{font-weight:700;font-size:14px;color:#0b3d91;}
+.mail .hora{font-size:12px;color:#8894a8;}
+.mail .texto{font-size:14px;margin-top:8px;white-space:pre-wrap;}
+.material-symbols-outlined{font-family:'Material Symbols Outlined';font-weight:normal;font-style:normal;line-height:1;letter-spacing:normal;text-transform:none;display:inline-block;white-space:nowrap;direction:ltr;vertical-align:middle;}
+
+/* layout examenes */
+.ex-layout{display:grid;grid-template-columns:1fr 340px;gap:16px;align-items:start;}
+.ex-panelcard{background:#fff;border-radius:16px;padding:18px;box-shadow:0 4px 20px rgba(0,0,0,.05);border:1px solid rgba(195,198,215,.35);}
+.ex-panelcard h4{font-family:'Quicksand',sans-serif;font-size:18px;font-weight:700;margin-bottom:12px;}
+.ex-daybox{display:flex;align-items:center;gap:12px;background:#eaf1fe;border-radius:12px;padding:12px;margin-bottom:14px;}
+.ex-daybox .fecha-chip{background:#1a73e8;color:#fff;border-radius:12px;width:52px;height:52px;display:flex;flex-direction:column;align-items:center;justify-content:center;flex-shrink:0;}
+.ex-daybox .fecha-chip .mes{font-size:11px;font-weight:700;text-transform:uppercase;line-height:1;}
+.ex-daybox .fecha-chip .num{font-size:20px;font-weight:700;line-height:1.1;font-family:'Quicksand',sans-serif;}
+.ex-daybox .txt b{display:block;font-size:14px;color:#191c1e;}
+.ex-daybox .txt span{font-size:12px;color:#5a6478;}
+.ex-evento{border-left:4px solid #1a73e8;padding:6px 0 6px 12px;margin-bottom:12px;}
+.ex-evento h5{font-size:14px;font-weight:700;color:#191c1e;}
+.ex-evento .sub{font-size:12px;color:#5a6478;margin-top:1px;}
+.ex-evento .tags{margin-top:5px;}
+
+/* gantt */
+.gantt-card{background:#fff;border-radius:16px;padding:18px;box-shadow:0 4px 20px rgba(0,0,0,.05);border:1px solid rgba(195,198,215,.35);margin-top:16px;}
+.gantt-card h3{font-family:'Quicksand',sans-serif;font-size:18px;font-weight:700;}
+.gantt-card .sub{font-size:13px;color:#5a6478;margin-bottom:14px;}
+.gantt-scroll{overflow-x:auto;}
+.gantt-inner{min-width:760px;position:relative;}
+.gantt-headrow{display:grid;border-bottom:1px solid #c3c6d7;padding-bottom:8px;}
+.gantt-headrow .lbl{font-weight:700;font-size:13px;color:#424655;padding-left:6px;}
+.gantt-headrow .dnum{text-align:center;font-size:11px;font-weight:700;color:#8894a8;}
+.gantt-headrow .dnum.hoy{color:#1a73e8;}
+.gantt-row{display:grid;align-items:center;height:44px;border-bottom:1px solid #f0f1f5;}
+.gantt-row .asig{display:flex;align-items:center;gap:8px;padding-left:6px;font-weight:700;font-size:13px;color:#191c1e;overflow:hidden;}
+.gantt-row .asig .pip{width:6px;height:26px;border-radius:6px;flex-shrink:0;}
+.gantt-track{position:relative;height:44px;grid-column:2 / -1;}
+.gantt-bar{position:absolute;top:9px;height:26px;border-radius:20px;display:flex;align-items:center;padding:0 8px;overflow:hidden;cursor:pointer;}
+.gantt-bar span{font-size:10px;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.gantt-diamond{position:absolute;top:11px;transform:translateX(-50%) rotate(45deg);width:16px;height:16px;border:2px solid #fff;box-shadow:0 1px 4px rgba(0,0,0,.2);cursor:pointer;}
+
+/* documentos */
+.side-panel{position:fixed;top:0;right:0;bottom:0;width:390px;background:rgba(255,255,255,.96);backdrop-filter:blur(14px);box-shadow:-12px 0 32px rgba(0,0,0,.10);z-index:60;display:flex;flex-direction:column;transform:translateX(100%);transition:transform .3s ease;}
+.side-panel.abierto{transform:translateX(0);}
+.sp-head{padding:22px 20px 16px;border-bottom:1px solid rgba(195,198,215,.4);}
+.sp-head .fila{display:flex;justify-content:space-between;align-items:flex-start;}
+.sp-ico{width:48px;height:48px;border-radius:50%;display:flex;align-items:center;justify-content:center;}
+.sp-close{background:none;border:none;cursor:pointer;padding:8px;border-radius:50%;color:#424655;}
+.sp-close:hover{background:#e0e3e5;}
+.sp-head h2{font-family:'Quicksand',sans-serif;font-size:26px;font-weight:700;color:#191c1e;margin-top:12px;}
+.sp-head p{font-size:13px;color:#5a6478;margin-top:2px;}
+.sp-body{padding:18px 20px;overflow-y:auto;flex:1;}
+.sp-stat{background:#eaf1fe;border-radius:14px;padding:12px;text-align:center;margin-bottom:16px;}
+.sp-stat .n{font-family:'Quicksand',sans-serif;font-size:26px;font-weight:700;color:#004bc3;}
+.sp-stat .l{font-size:12px;color:#5a6478;font-weight:600;}
+.sp-doc{border-left:4px solid #e8a800;background:#fbfcff;border-radius:12px;padding:12px;margin-bottom:12px;}
+.sp-doc .fecha{font-size:12px;color:#5a6478;font-weight:700;}
+.sp-doc .texto{font-size:13px;color:#1a2233;margin:6px 0 10px;white-space:pre-wrap;}
+.sp-btn{display:inline-flex;align-items:center;gap:6px;text-decoration:none;background:#e8a800;color:#fff;padding:8px 14px;border-radius:20px;font-size:13px;font-weight:700;}
+.sp-btn .material-symbols-outlined{font-size:16px;}
+.overlay-bg{position:fixed;inset:0;background:rgba(0,0,0,.25);z-index:55;opacity:0;pointer-events:none;transition:opacity .3s;}
+.overlay-bg.abierto{opacity:1;pointer-events:auto;}
+.doc-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:16px;transition:margin-right .3s ease;}
+.doc-grid.con-panel{margin-right:400px;}
+.doc-card{background:#fff;border-radius:22px;padding:18px;position:relative;overflow:hidden;border:1px solid rgba(195,198,215,.4);box-shadow:0 4px 20px rgba(0,0,0,.03);cursor:pointer;transition:transform .2s,box-shadow .2s;min-height:180px;display:flex;flex-direction:column;}
+.doc-card:hover{transform:translateY(-4px);box-shadow:0 12px 30px rgba(0,0,0,.10);}
+.doc-card.sel{outline:2.5px solid #1a73e8;outline-offset:-1px;}
+.doc-card .corner{position:absolute;top:-32px;right:-32px;width:120px;height:120px;border-bottom-left-radius:100%;opacity:.08;z-index:0;}
+.doc-card .top{display:flex;justify-content:space-between;align-items:flex-start;position:relative;z-index:1;}
+.doc-ico{width:46px;height:46px;border-radius:50%;display:flex;align-items:center;justify-content:center;}
+.doc-ico .material-symbols-outlined{font-size:24px;}
+.doc-count{padding:4px 12px;border-radius:20px;font-size:12px;font-weight:700;border:1px solid;white-space:nowrap;}
+.doc-card h3{position:relative;z-index:1;font-family:'Quicksand',sans-serif;font-size:19px;font-weight:700;color:#191c1e;margin-top:auto;padding-top:14px;}
+.doc-card .verdocs{position:relative;z-index:1;font-size:12px;font-weight:700;color:#004bc3;margin-top:6px;display:flex;align-items:center;gap:4px;}
+
+/* agente */
+.ag-item{background:#fff;border-radius:14px;padding:14px 16px;margin-bottom:10px;box-shadow:0 2px 8px rgba(0,0,0,.05);border-left:6px solid #8894a8;}
+.ag-item .cab{display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap;}
+.ag-item .tipo{font-weight:700;font-size:14px;color:#191c1e;}
+.ag-item .fecha{font-size:12px;color:#8894a8;}
+.ag-item .det{font-size:14px;color:#1a2233;margin-top:6px;}
+.ag-item .acc{font-size:13px;color:#5a6478;margin-top:6px;}
+.ag-item.aplicado{border-left-color:#22a06b;}
+.ag-item.pendiente{border-left-color:#e8a800;}
+.ag-estado{font-size:11px;font-weight:700;padding:3px 10px;border-radius:20px;color:#fff;}
+.ag-estado.aplicado{background:#22a06b;}
+.ag-item.pendiente{border-left-color:#e5484d;background:#fff8f8;}
+.ag-estado.pendiente{background:#e5484d;}
+.ag-aplicar{background:#1a73e8;color:#fff;border:none;border-radius:20px;padding:9px 16px;font-size:13px;font-weight:700;cursor:pointer;}
+.ag-aplicar:disabled{opacity:.6;}
+.estado-auto{font-size:12px;color:#8894a8;display:flex;align-items:center;gap:6px;}
+.estado-auto .punto{width:8px;height:8px;border-radius:50%;background:#22a06b;}
+.ag-descartar{background:#eef1f7;color:#5a6478;border:none;border-radius:20px;padding:9px 16px;font-size:13px;font-weight:700;cursor:pointer;}
+.ag-respaldo{margin-top:8px;font-size:12px;color:#5a6478;background:#f4f6fb;border-left:3px solid #c3c6d7;padding:8px 10px;border-radius:6px;font-style:italic;}
+.ex-respaldo{margin-top:6px;font-size:11px;color:#5a6478;background:#f4f6fb;padding:6px 8px;border-radius:6px;font-style:italic;}
+.ag-estado.ok{background:#8894a8;}
+
+@media (max-width:900px){.ex-layout{grid-template-columns:1fr;}}
+@media (max-width:600px){
+  body{padding:10px;}
+  header.apphead{padding:16px 18px;border-radius:14px;}
+  header.apphead h1{font-size:18px;}
+  header.apphead p{font-size:12px;}
+  .tab{padding:8px 14px;font-size:13px;}
+  .toprow{flex-direction:column;align-items:stretch;}
+  .filtro{width:100%;}.refresh{width:100%;}
+  .cal-grid{gap:3px;}
+  .cal-cell{min-height:48px;padding:3px;border-radius:8px;}
+  .cal-num{font-size:12px;}.cal-dow{font-size:10px;}
+  .cal-cell span[style*="font-size:10px"]{font-size:8px!important;}
+  .cal-dot{width:5px;height:5px;}
+  .card{padding:12px;}.card h3{font-size:15px;}
+  .mail{padding:12px;}.mail .texto{font-size:13px;}
+  .day-title{font-size:14px;}.badge{font-size:11px;padding:2px 8px;}
+  .doc-grid{grid-template-columns:1fr;gap:12px;}.doc-grid.con-panel{margin-right:0;}.side-panel{width:100%;}
+}
+</style>
+</head>
+<body>
+<header class="apphead">
+  <h1>📚 Control Académico — Emmanuel</h1>
+  <p>4° Básico B · II Semestre 2026 · Plan oficial + agente de seguimiento</p>
+</header>
+
+<div class="tabs">
+  <button class="tab active" onclick="mostrar('examenes',this)">📅 Fechas de exámenes</button>
+  <button class="tab" onclick="mostrar('avisos',this)">🔔 Avisos</button>
+  <button class="tab" onclick="mostrar('documentos',this)">📎 Documentos descargables</button>
+  <button class="tab" id="tabAgente" onclick="mostrar('agente',this)">🕵️ Agente</button>
+</div>
+
+<div class="toprow">
+  <div class="estado-auto" id="estadoAuto"></div>
+  <select id="filtroAsig" class="filtro" onchange="render()"><option value="">Todas las asignaturas</option></select>
+</div>
+
+<div id="examenes" class="panel active"><p class="empty">Cargando…</p></div>
+<div id="avisos" class="panel"><p class="empty">Cargando…</p></div>
+<div id="documentos" class="panel"><p class="empty">Cargando…</p></div>
+<div id="agente" class="panel"><p class="empty">Cargando…</p></div>
+
+<div class="overlay-bg" id="overlayBg" onclick="cerrarPanel()"></div>
+<aside class="side-panel" id="sidePanel">
+  <div class="sp-head">
+    <div class="fila">
+      <div class="sp-ico" id="spIco" style="background:#eaf1fe;color:#004bc3"><span class="material-symbols-outlined">folder</span></div>
+      <button class="sp-close" onclick="cerrarPanel()"><span class="material-symbols-outlined">close</span></button>
+    </div>
+    <h2 id="spTitulo">Asignatura</h2>
+    <p>Documentos descargables recientes</p>
+  </div>
+  <div class="sp-body" id="spBody"></div>
+</aside>
+
+<script>
+const CUENTA_EMMANUEL = 'emmanuel.arias@newheavenhs.cl';
+function linkConCuenta(url){ if(!url) return ''; return url + (url.indexOf('?')>=0?'&':'?') + 'authuser=' + encodeURIComponent(CUENTA_EMMANUEL); }
+const MESES=['Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre'];
+const MES_ABR=['ENE','FEB','MAR','ABR','MAY','JUN','JUL','AGO','SEP','OCT','NOV','DIC'];
+
+let DATOS=null, calRef=new Date(), diaSel=null, asigSel=null;
+let calRefEx=new Date(), diaSelEx=null;
+
+function mostrar(id,btn){
+  document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+  document.getElementById(id).classList.add('active'); btn.classList.add('active');
+  if(id!=='documentos') cerrarPanel();
+}
+function cargar(){
+  ['examenes','avisos','documentos','agente'].forEach(id=>document.getElementById(id).innerHTML='<p class="empty">Cargando…</p>');
+  google.script.run
+    .withSuccessHandler(d=>{DATOS=d;poblarFiltro();render();})
+    .withFailureHandler(e=>{
+      document.getElementById('examenes').innerHTML=
+        '<p class="empty">No se pudieron cargar los datos.<br><small>'+(e&&e.message?e.message:'')+'</small></p>';
+    })
+    .obtenerDatos();
+}
+function poblarFiltro(){
+  const sel=document.getElementById('filtroAsig');
+  const set=new Set((DATOS.examenes||[]).map(e=>e.Asignatura));
+  sel.innerHTML='<option value="">Todas las asignaturas</option>';
+  [...set].sort().forEach(a=>{const o=document.createElement('option');o.value=a;o.textContent=a;sel.appendChild(o);});
+}
+function dias(iso){const h=new Date();h.setHours(0,0,0,0);const f=new Date(iso);f.setHours(0,0,0,0);return Math.round((f-h)/86400000);}
+function semaforo(d){if(d<0)return['gris','Realizada',0];if(d<=3)return['rojo','¡Muy pronto!',95];if(d<=10)return['amarillo','Cerca',60];return['verde','Con tiempo',25];}
+function color(c){return{verde:'#22a06b',amarillo:'#e8a800',rojo:'#e5484d',gris:'#8894a8'}[c]||'#1a73e8';}
+function isoDia(fechaISO){const d=new Date(fechaISO);return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');}
+function cap(s){return s.charAt(0).toUpperCase()+s.slice(1);}
+function fechaVigente(e){return e['Fecha confirmada']||e['Fecha plan inicio'];}
+function fechaFin(e){return e['Fecha confirmada']||e['Fecha plan término']||e['Fecha plan inicio'];}
+
+function pintarEstadoAuto(){
+  const el=document.getElementById('estadoAuto'); if(!el) return;
+  const a=DATOS.auto||{};
+  if(a.activa){
+    el.innerHTML='<span class="punto"></span>Actualizado automáticamente'+(a.ultimaEjecucion?' · '+a.ultimaEjecucion:'');
+  } else {
+    el.innerHTML='<span class="punto" style="background:#e8a800"></span>Actualización automática desactivada';
+  }
+}
+function render(){ if(!DATOS)return; pintarEstadoAuto(); renderExamenes(); renderAvisos(); renderDocumentos(); renderAgente(); actualizarPipAgente(); }
+
+// ============ EXAMENES ============
+function examenesPorDia(){
+  const filtro=document.getElementById('filtroAsig').value; const map={};
+  (DATOS.examenes||[]).forEach(e=>{
+    const v=fechaVigente(e);if(!v)return; if(filtro && e.Asignatura!==filtro)return;
+    (map[isoDia(v)]=map[isoDia(v)]||[]).push(e);
+  }); return map;
+}
+function renderExamenes(){
+  const cont=document.getElementById('examenes');
+  const porDia=examenesPorDia();
+  const y=calRefEx.getFullYear(),m=calRefEx.getMonth();
+  const primero=new Date(y,m,1),ini=(primero.getDay()+6)%7;
+  const diasMes=new Date(y,m+1,0).getDate();
+  const hoyIso=isoDia(new Date().toISOString());
+
+  let cal='<div class="ex-panelcard">';
+  cal+='<div class="cal-head"><button class="cal-nav" onclick="mesAntEx()">‹</button>'+
+       '<div style="text-align:center"><h2>'+MESES[m]+' '+y+'</h2><div style="font-size:12px;color:#8894a8;font-weight:600">Vista mensual</div></div>'+
+       '<button class="cal-nav" onclick="mesSigEx()">›</button></div><div class="cal-grid">';
+  ['L','M','X','J','V','S','D'].forEach(d=>cal+='<div class="cal-dow">'+d+'</div>');
+  for(let i=0;i<ini;i++)cal+='<div class="cal-cell empty-cell"></div>';
+  for(let dnum=1;dnum<=diasMes;dnum++){
+    const iso=y+'-'+String(m+1).padStart(2,'0')+'-'+String(dnum).padStart(2,'0');
+    const exs=porDia[iso]||[];
+    const hayMov=exs.some(e=>e['¿Movida?']==='SÍ');
+    const clHoy=iso===hoyIso?'cal-today':'', clSel=iso===diaSelEx?'selected':'', clMov=hayMov?'tienemov':'';
+    let et='';
+    exs.slice(0,3).forEach(e=>{
+      const d=dias(fechaVigente(e));const cl=semaforo(d)[0];
+      const bg={verde:'#EAF3DE',amarillo:'#FAEEDA',rojo:'#FCEBEB',gris:'#F1EFE8'}[cl];
+      const fg={verde:'#3B6D11',amarillo:'#854F0B',rojo:'#A32D2D',gris:'#5F5E5A'}[cl];
+      const nom=e.Asignatura.length>11?e.Asignatura.slice(0,10)+'…':e.Asignatura;
+      et+='<span style="display:block;font-size:10px;background:'+bg+';color:'+fg+';border-radius:4px;padding:1px 3px;margin-top:2px;overflow:hidden;white-space:nowrap;text-overflow:ellipsis">'+(e['¿Movida?']==='SÍ'?'📌':'')+nom+'</span>';
+    });
+    cal+='<div class="cal-cell '+clHoy+' '+clSel+' '+clMov+'" onclick="selDiaEx(\''+iso+'\')"><span class="cal-num">'+dnum+'</span>'+et+'</div>';
+  }
+  cal+='</div></div>';
+
+  let det='<div class="ex-panelcard"><h4>Detalles del Día</h4>';
+  if(diaSelEx){
+    const exs=porDia[diaSelEx]||[];
+    const fd=new Date(diaSelEx+'T12:00:00');
+    det+='<div class="ex-daybox"><div class="fecha-chip"><span class="mes">'+MES_ABR[fd.getMonth()]+'</span><span class="num">'+fd.getDate()+'</span></div>'+
+         '<div class="txt"><b>'+cap(fd.toLocaleDateString('es-CL',{weekday:'long'}))+', '+fd.getDate()+' de '+MESES[fd.getMonth()].toLowerCase()+'</b>'+
+         '<span>'+exs.length+' evaluación(es) programada(s)</span></div></div>';
+    if(!exs.length) det+='<p class="empty">Sin evaluaciones ese día.</p>';
+    exs.forEach(e=>{
+      const d=dias(fechaVigente(e));const cl=semaforo(d)[0],txt=semaforo(d)[1];
+      const mov=(e['¿Movida?']==='SÍ'); const susp=String(e.Estado||'').toUpperCase().indexOf('SUSPEND')>=0;
+      det+='<div class="ex-evento" style="border-left-color:'+color(cl)+'"><h5>'+e.Asignatura+'</h5>'+
+           '<div class="sub">'+e.Contenido+'</div>'+
+           '<div class="sub">'+e.Tipo+' · '+e.Instrumento+' · <b>'+e.Porcentaje+'%</b></div>'+
+           '<div class="tags"><span class="badge '+cl+'">'+txt+'</span>'+
+           (mov?'<span class="badge movida">📌 Movida por el agente</span>':'')+
+           (susp?'<span class="badge susp">🚫 Suspendida</span>':'')+
+           '<span class="dias">'+(d<0?'Ya fue':d+' días')+'</span></div>'+
+           (e.Respaldo?'<div class="ex-respaldo">📨 '+String(e.Respaldo).replace(/</g,'&lt;')+'</div>':'')+
+           '<button class="estudiar-btn" onclick="abrirRepaso(\''+e.Asignatura.replace(/'/g,"\\'")+'\',\''+String(e.Contenido||'').replace(/'/g,"\\'").replace(/"/g,'')+'\')"><span class="material-symbols-outlined">school</span>Estudiar para esta prueba</button>'+
+           '</div>';
+    });
+  } else {
+    det+='<div style="display:flex;gap:12px;flex-wrap:wrap;font-size:12px;color:#5a6478;margin-bottom:10px">'+
+      '<span><span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:#639922;vertical-align:middle;margin-right:4px"></span>Con tiempo</span>'+
+      '<span><span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:#e8a800;vertical-align:middle;margin-right:4px"></span>Cerca</span>'+
+      '<span><span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:#e5484d;vertical-align:middle;margin-right:4px"></span>Muy pronto</span></div>'+
+      '<p class="empty">Toca un día del calendario para ver sus evaluaciones. El borde morado marca exámenes movidos por el agente.</p>';
+  }
+  det+='</div>';
+
+  cont.innerHTML='<div class="ex-layout">'+cal+det+'</div>'+renderGantt(y,m,hoyIso);
+}
+function selDiaEx(iso){diaSelEx=iso;renderExamenes();}
+function mesAntEx(){calRefEx=new Date(calRefEx.getFullYear(),calRefEx.getMonth()-1,1);diaSelEx=null;renderExamenes();}
+function mesSigEx(){calRefEx=new Date(calRefEx.getFullYear(),calRefEx.getMonth()+1,1);diaSelEx=null;renderExamenes();}
+
+const COLOR_ASIG=['#1a73e8','#006c4a','#a65900','#ba1a1a','#7b1fa2','#c2185b','#0097a7','#5d4037'];
+function colorAsig(a){let s=0;for(let i=0;i<a.length;i++)s+=a.charCodeAt(i);return COLOR_ASIG[s%COLOR_ASIG.length];}
+function hexA(hex,al){const n=parseInt(hex.slice(1),16);return 'rgba('+((n>>16)&255)+','+((n>>8)&255)+','+(n&255)+','+al+')';}
+function renderGantt(y,m,hoyIso){
+  const filtro=document.getElementById('filtroAsig').value;
+  const diasMes=new Date(y,m+1,0).getDate();
+  const primeroMes=new Date(y,m,1),ultimoMes=new Date(y,m,diasMes);
+  const porAsig={};
+  (DATOS.examenes||[]).forEach(e=>{
+    if(filtro && e.Asignatura!==filtro)return;
+    const ini=new Date(fechaVigente(e)),fin=new Date(fechaFin(e));
+    if(isNaN(ini))return;
+    const iniD=new Date(ini.getFullYear(),ini.getMonth(),ini.getDate());
+    const finD=new Date(fin.getFullYear(),fin.getMonth(),fin.getDate());
+    if(finD<primeroMes||iniD>ultimoMes)return;
+    (porAsig[e.Asignatura]=porAsig[e.Asignatura]||[]).push({e,iniD,finD});
+  });
+  const asigs=Object.keys(porAsig).sort();
+  if(!asigs.length) return '<div class="gantt-card"><h3>Línea de tiempo (Gantt)</h3><div class="sub">Evaluaciones de '+MESES[m]+'</div><p class="empty">No hay evaluaciones este mes'+(filtro?' para '+filtro:'')+'.</p></div>';
+  const colTpl='160px repeat('+diasMes+',1fr)';
+  let html='<div class="gantt-card"><h3>Línea de tiempo (Gantt)</h3><div class="sub">Evaluaciones de '+MESES[m]+' '+y+' por asignatura (barra = del inicio al término)</div><div class="gantt-scroll"><div class="gantt-inner">';
+  html+='<div class="gantt-headrow" style="grid-template-columns:'+colTpl+'"><div class="lbl">Asignatura</div>';
+  for(let d=1;d<=diasMes;d++){const iso=y+'-'+String(m+1).padStart(2,'0')+'-'+String(d).padStart(2,'0');html+='<div class="dnum '+(iso===hoyIso?'hoy':'')+'">'+d+'</div>';}
+  html+='</div>';
+  asigs.forEach(asig=>{
+    const col=colorAsig(asig);
+    html+='<div class="gantt-row" style="grid-template-columns:'+colTpl+'"><div class="asig"><span class="pip" style="background:'+col+'"></span>'+asig+'</div><div class="gantt-track">';
+    porAsig[asig].forEach(o=>{
+      const e=o.e;
+      const iniDia=o.iniD<primeroMes?1:o.iniD.getDate();
+      const finDia=o.finD>ultimoMes?diasMes:o.finD.getDate();
+      const leftPct=((iniDia-1)/diasMes)*100, widthPct=((finDia-iniDia+1)/diasMes)*100;
+      const mov=(e['¿Movida?']==='SÍ');
+      if(finDia===iniDia){
+        const centerPct=((iniDia-0.5)/diasMes)*100;
+        html+='<div class="gantt-diamond" style="left:'+centerPct+'%;background:'+col+'" title="'+e.Asignatura+' · '+e.Contenido+'"></div>';
+      } else {
+        html+='<div class="gantt-bar" style="left:'+leftPct+'%;width:'+widthPct+'%;background:'+hexA(col,.18)+';border:1px solid '+hexA(col,.5)+'" title="'+e.Asignatura+' · '+e.Contenido+'"><span style="color:'+col+'">'+(mov?'📌 ':'')+e.Contenido+'</span></div>';
+      }
+    });
+    html+='</div></div>';
+  });
+  html+='</div></div></div>';
+  return html;
+}
+
+// ============ AVISOS ============
+function correosPorDia(){
+  const filtro=document.getElementById('filtroAsig').value; const map={};
+  (DATOS.anuncios||[]).forEach(a=>{
+    if(!a.Fecha)return; if(filtro && a.Asignatura!==filtro)return;
+    (map[isoDia(a.Fecha)]=map[isoDia(a.Fecha)]||[]).push(a);
+  });
+  Object.keys(map).forEach(k=>map[k].sort((x,y)=>new Date(x.Fecha)-new Date(y.Fecha)));
+  return map;
+}
+function renderAvisos(){
+  const cont=document.getElementById('avisos');
+  const porDia=correosPorDia();
+  const y=calRef.getFullYear(),m=calRef.getMonth();
+  const primero=new Date(y,m,1),ini=(primero.getDay()+6)%7;
+  const diasMes=new Date(y,m+1,0).getDate();
+  const hoyIso=isoDia(new Date().toISOString());
+  let html='<div class="card" style="border-left:none"><div class="cal-head"><button class="cal-nav" onclick="mesAnt()">‹</button><h2>'+MESES[m]+' '+y+'</h2><button class="cal-nav" onclick="mesSig()">›</button></div><div class="cal-grid">';
+  ['L','M','X','J','V','S','D'].forEach(d=>html+='<div class="cal-dow">'+d+'</div>');
+  for(let i=0;i<ini;i++)html+='<div class="cal-cell empty-cell"></div>';
+  for(let dnum=1;dnum<=diasMes;dnum++){
+    const iso=y+'-'+String(m+1).padStart(2,'0')+'-'+String(dnum).padStart(2,'0');
+    const correos=porDia[iso]||[];
+    const clHoy=iso===hoyIso?'cal-today':'',clSel=iso===diaSel?'selected':'';
+    let dots='';correos.slice(0,4).forEach(()=>dots+='<span class="cal-dot"></span>');
+    html+='<div class="cal-cell '+clHoy+' '+clSel+'" onclick="selDia(\''+iso+'\')"><span class="cal-num">'+dnum+'</span><div class="cal-dots">'+dots+'</div></div>';
+  }
+  html+='</div></div>';
+  if(diaSel){
+    const correos=porDia[diaSel]||[];
+    const fTxt=new Date(diaSel+'T12:00:00').toLocaleDateString('es-CL',{weekday:'long',day:'2-digit',month:'long'});
+    html+='<div class="day-title">📨 '+fTxt+' — '+correos.length+' correo(s)</div>';
+    if(!correos.length)html+='<p class="empty">Sin correos ese día.</p>';
+    correos.forEach(c=>{
+      const hora=new Date(c.Fecha).toLocaleTimeString('es-CL',{hour:'2-digit',minute:'2-digit'});
+      const adj=parseInt(c.Adjuntos)||0; const link=c.Link||''; const linkEmm=linkConCuenta(link);
+      let alerta='';
+      if(adj>0){ alerta='<div style="margin-top:8px">'+(link?'<a href="'+linkEmm+'" target="_blank" style="text-decoration:none"><span class="badge" style="background:#e8a800;cursor:pointer">📎 '+adj+' documento(s) — Ir a descargar en Classroom ↗</span></a>':'<span class="badge" style="background:#e8a800">📎 '+adj+' documento(s) en Classroom</span>')+'</div>'; }
+      html+='<div class="mail"><div class="asig">'+(c.Asignatura||'General')+'</div><div class="hora">'+hora+' · '+(c.Profesor||'')+'</div><div class="texto">'+(c.Texto||'').replace(/</g,'&lt;')+'</div>'+alerta+'</div>';
+    });
+  } else html+='<p class="empty">Toca un día con puntos para ver los correos.</p>';
+  cont.innerHTML=html;
+}
+function selDia(iso){diaSel=iso;renderAvisos();}
+function mesAnt(){calRef=new Date(calRef.getFullYear(),calRef.getMonth()-1,1);renderAvisos();}
+function mesSig(){calRef=new Date(calRef.getFullYear(),calRef.getMonth()+1,1);renderAvisos();}
+
+// ============ DOCUMENTOS ============
+const ICONO_ASIG={'Matemática':'calculate','Lenguaje y Comunicación':'menu_book','Ciencias Naturales':'science','Historia, Geografía y Ciencias Sociales':'public','Inglés':'translate','Religión':'church','Educación física':'sports_soccer','Artes visuales':'palette','Música':'music_note','Tecnología':'devices','Lengua y cultura de los pueblos originarios':'diversity_3'};
+const PALETA=[{bg:'#eaf1fe',fg:'#004bc3'},{bg:'#e6f4ee',fg:'#006c4a'},{bg:'#fdeede',fg:'#a65900'},{bg:'#ffe9e9',fg:'#ba1a1a'},{bg:'#f2e9fb',fg:'#7b1fa2'},{bg:'#fde8f0',fg:'#c2185b'}];
+function paletaAsig(a){let s=0;for(let i=0;i<a.length;i++)s+=a.charCodeAt(i);return PALETA[s%PALETA.length];}
+function iconoAsig(a){return ICONO_ASIG[a]||'folder';}
+function docsPorAsignatura(){
+  const filtro=document.getElementById('filtroAsig').value;const map={};
+  (DATOS.anuncios||[]).forEach(a=>{
+    const adj=parseInt(a.Adjuntos)||0; if(adj<=0)return; if(!a.Link)return;
+    const asig=a.Asignatura||'General'; if(filtro && asig!==filtro)return;
+    (map[asig]=map[asig]||[]).push(a);
+  });
+  Object.keys(map).forEach(k=>map[k].sort((x,y)=>new Date(y.Fecha)-new Date(x.Fecha)));
+  return map;
+}
+function renderDocumentos(){
+  const cont=document.getElementById('documentos');
+  const porAsig=docsPorAsignatura(); const asigs=Object.keys(porAsig).sort();
+  if(!asigs.length){cont.innerHTML='<p class="empty">Aún no hay correos con documentos para descargar.</p>';cerrarPanel();return;}
+  const conPanel=asigSel&&porAsig[asigSel]?'con-panel':'';
+  let html='<div class="doc-grid '+conPanel+'" id="docGrid">';
+  asigs.forEach(asig=>{
+    const docs=porAsig[asig];const pal=paletaAsig(asig);const icono=iconoAsig(asig);const sel=asig===asigSel?'sel':'';
+    html+='<div class="doc-card '+sel+'" onclick="abrirPanel(\''+asig.replace(/'/g,"\\'")+'\')"><div class="corner" style="background:'+pal.fg+'"></div><div class="top"><div class="doc-ico" style="background:'+pal.bg+';color:'+pal.fg+'"><span class="material-symbols-outlined">'+icono+'</span></div><span class="doc-count" style="background:'+pal.bg+';color:'+pal.fg+';border-color:'+pal.fg+'33">'+docs.length+' correo(s)</span></div><h3>'+asig+'</h3><div class="verdocs">Ver documentos <span class="material-symbols-outlined" style="font-size:16px">chevron_right</span></div></div>';
+  });
+  html+='</div><p style="text-align:center;font-size:12px;color:#8894a8;margin-top:14px">Los documentos se abren en Classroom con la cuenta de Emmanuel.</p>';
+  cont.innerHTML=html;
+  if(asigSel&&porAsig[asigSel])pintarPanel(asigSel,porAsig[asigSel]);
+}
+function abrirPanel(asig){
+  asigSel=asig; const porAsig=docsPorAsignatura();
+  pintarPanel(asig,porAsig[asig]||[]);
+  document.getElementById('sidePanel').classList.add('abierto');
+  document.getElementById('overlayBg').classList.add('abierto');
+  renderDocumentos();
+}
+function pintarPanel(asig,docs){
+  const pal=paletaAsig(asig);const icono=iconoAsig(asig);
+  const spIco=document.getElementById('spIco');
+  spIco.style.background=pal.bg;spIco.style.color=pal.fg;
+  spIco.innerHTML='<span class="material-symbols-outlined">'+icono+'</span>';
+  document.getElementById('spTitulo').textContent=asig;
+  let html='<div class="sp-stat"><div class="n">'+docs.length+'</div><div class="l">correo(s) con documentos</div></div>';
+  docs.forEach(c=>{
+    const adj=parseInt(c.Adjuntos)||0;const linkEmm=linkConCuenta(c.Link||'');
+    const fTxt=new Date(c.Fecha).toLocaleDateString('es-CL',{weekday:'long',day:'2-digit',month:'long'});
+    const hora=new Date(c.Fecha).toLocaleTimeString('es-CL',{hour:'2-digit',minute:'2-digit'});
+    const resumen=(c.Texto||'').replace(/</g,'&lt;');
+    const rc=resumen.length>180?resumen.slice(0,180)+'…':resumen;
+    html+='<div class="sp-doc"><div class="fecha">📅 '+fTxt+' · '+hora+'</div><div class="texto">'+rc+'</div><a class="sp-btn" href="'+linkEmm+'" target="_blank"><span class="material-symbols-outlined">download</span>'+adj+' documento(s) — Descargar</a></div>';
+  });
+  document.getElementById('spBody').innerHTML=html;
+}
+function cerrarPanel(){
+  asigSel=null;
+  document.getElementById('sidePanel').classList.remove('abierto');
+  document.getElementById('overlayBg').classList.remove('abierto');
+  const grid=document.getElementById('docGrid');if(grid)grid.classList.remove('con-panel');
+  document.querySelectorAll('.doc-card').forEach(c=>c.classList.remove('sel'));
+}
+
+// ============ AGENTE (bandeja) ============
+function renderAgente(){
+  const cont=document.getElementById('agente');
+  const filtro=document.getElementById('filtroAsig').value;
+  let items=(DATOS.agente||[]);
+  if(filtro) items=items.filter(x=>x.Asignatura===filtro);
+  if(!items.length){
+    cont.innerHTML='<div class="card" style="border-left-color:#22a06b"><h3>🕵️ Todo en orden</h3>'+
+      '<div class="meta">El agente revisa los correos que llegan y avisa aquí cuando detecta que un examen se movió, se suspendió, cambió de temario, o aparece algo nuevo. Por ahora no hay novedades.</div></div>';
+    return;
+  }
+  let html='<p style="font-size:13px;color:#5a6478;margin-bottom:12px">El agente revisó los correos y detectó estos cambios. Los marcados como <b>Aplicado</b> ya se reflejan en tu calendario; los <b>Pendiente</b> necesitan tu revisión.</p>';
+  items.forEach(x=>{
+    const est=String(x.Estado||'ok').toLowerCase();
+    const esProp = est==='propuesta';
+    const clase = est==='aplicado'?'aplicado' : (esProp?'pendiente':'');
+    const f=new Date(x.Fecha).toLocaleDateString('es-CL',{day:'2-digit',month:'long',hour:'2-digit',minute:'2-digit'});
+    let accion='';
+    if(esProp){
+      const idb='ap_'+Math.random().toString(36).slice(2);
+      accion='<div style="margin-top:10px;display:flex;gap:8px;flex-wrap:wrap" id="box_'+idb+'">'+
+        '<button class="ag-aplicar" onclick="aprobarProp(\''+String(x['ID correo']||'')+'\',\''+
+          String(x.Asignatura||'').replace(/'/g,"\\'")+'\',\''+String(x.ContenidoObjetivo||'').replace(/'/g,"\\'")+'\',\''+
+          String(x.FechaNueva||'')+'\',\''+String(x.Tipo||'')+'\',\''+idb+'\')">&#10004; Aprobar y aplicar</button>'+
+        '<button class="ag-descartar" onclick="descartarProp(\''+String(x['ID correo']||'')+'\',\''+idb+'\')">&#10006; No corresponde</button>'+
+        '</div>';
+    }
+    const respaldo = x.TextoCorreo
+      ? '<div class="ag-respaldo">&#128233; Correo del '+(x.FechaCorreo||'')+': "'+String(x.TextoCorreo).replace(/</g,'&lt;')+'"</div>'
+      : '';
+    html+='<div class="ag-item '+clase+'"><div class="cab"><span class="tipo">'+iconoTipo(x.Tipo)+' '+(x.Tipo||'Aviso')+' &middot; '+(x.Asignatura||'')+'</span>'+
+          '<span class="ag-estado '+(est==='aplicado'?'aplicado':(esProp?'pendiente':'ok'))+'">'+(esProp?'requiere tu aprobación':(x.Estado||'ok'))+'</span></div>'+
+          '<div class="det">'+(x['Detección']||x.Deteccion||'')+'</div>'+
+          (x.FechaNueva?'<div class="acc">Fecha propuesta: <b>'+x.FechaNueva+'</b></div>':'')+
+          '<div class="acc">&rarr; '+(x['Acción tomada']||x.Accion||'')+'</div>'+
+          respaldo+accion+
+          '<div class="fecha" style="margin-top:6px">'+f+'</div></div>';
+  });
+  cont.innerHTML=html;
+}
+function iconoTipo(t){
+  return {'Examen movido':'📌','Suspensión':'🚫','Cambio de temario':'✏️','Material nuevo':'🎒','Evaluación nueva':'🆕'}[t]||'ℹ️';
+}
+function actualizarPipAgente(){
+  const tab=document.getElementById('tabAgente');
+  const prev=tab.querySelector('.pip'); if(prev) prev.remove();
+  const pend=(DATOS.agente||[]).filter(x=>String(x.Estado||'').toLowerCase()==='pendiente').length;
+  if(pend>0){ const s=document.createElement('span'); s.className='pip'; s.textContent=pend; tab.appendChild(s); }
+}
+
+function aprobarProp(idCorreo, asig, contenido, fechaISO, tipo, idb){
+  const box=document.getElementById('box_'+idb);
+  if(box) box.innerHTML='<span style="font-size:13px;color:#5a6478">Buscando evaluaciones…</span>';
+  google.script.run.withSuccessHandler(function(ops){
+    if(!ops || !ops.length){ if(box) box.innerHTML='<span style="color:#ba1a1a;font-size:13px">No hay evaluaciones en esa asignatura</span>'; return; }
+    let cual = contenido && ops.indexOf(contenido)>=0 ? contenido : null;
+    if(!cual){
+      const lista=ops.map((o,i)=>(i+1)+'. '+o).join('\n');
+      const r=prompt('¿A cuál evaluación de '+asig+' aplico la fecha '+fechaISO+'?\n\n'+lista+'\n\nEscribe el número:');
+      const idx=parseInt(r)-1;
+      if(isNaN(idx)||idx<0||idx>=ops.length){ renderAgente(); return; }
+      cual=ops[idx];
+    }
+    if(box) box.innerHTML='<span style="font-size:13px;color:#5a6478">Aplicando…</span>';
+    google.script.run.withSuccessHandler(function(r){
+      if(box) box.innerHTML='<span style="font-size:13px;color:'+(r&&r.ok?'#22a06b':'#ba1a1a')+'">'+(r?r.msg:'Error')+'</span>';
+      cargar();
+    }).aprobarPropuesta(idCorreo, asig, cual, fechaISO, tipo);
+  }).opcionesExamenesLimpio(asig);
+}
+function descartarProp(idCorreo, idb){
+  const box=document.getElementById('box_'+idb);
+  if(box) box.innerHTML='<span style="font-size:13px;color:#5a6478">Descartando…</span>';
+  google.script.run.withSuccessHandler(function(){ cargar(); }).descartarPropuesta(idCorreo);
+}
+
+// ============ REPASO POR EXAMEN ============
+let repAsig=null, repCont=null, repTipo='quiz';
+function abrirRepaso(asig, contenido){
+  repAsig=asig; repCont=contenido; repTipo='quiz';
+  document.getElementById('repTitulo').innerHTML='&#128214; Estudiar: '+contenido;
+  document.getElementById('repSub').textContent=asig;
+  document.getElementById('repModalBg').classList.add('abierto');
+  pintarRepTipos(); cargarRepaso();
+}
+function cerrarRepaso(){ document.getElementById('repModalBg').classList.remove('abierto'); }
+function pintarRepTipos(){
+  const tipos=[['quiz','Quiz'],['flash','Tarjetas'],['vf','V/F'],['completar','Completar'],['adivinanza','Adivinanzas']];
+  let h=''; tipos.forEach(function(t){ h+='<button class="rep-tipo '+(t[0]===repTipo?'on':'')+'" onclick="camRepTipo(\''+t[0]+'\')">'+t[1]+'</button>'; });
+  document.getElementById('repTipos').innerHTML=h;
+}
+function camRepTipo(t){ repTipo=t; pintarRepTipos(); cargarRepaso(); }
+function cargarRepaso(){
+  const body=document.getElementById('repBody');
+  body.innerHTML='<div class="rep-load">Preparando tu repaso…</div>';
+  google.script.run.withSuccessHandler(function(r){
+    if(!r||!r.ok){ body.innerHTML='<div class="rep-load">'+((r&&r.msg)||'No se pudo cargar.')+'</div>'; return; }
+    if(repTipo==='quiz') pintarRepQuiz(r.items);
+    else if(repTipo==='flash') pintarRepFlash(r.items);
+    else if(repTipo==='vf') pintarRepVF(r.items);
+    else if(repTipo==='completar') pintarRepCompletar(r.items);
+    else if(repTipo==='adivinanza') pintarRepAdivinanza(r.items);
+  }).obtenerRepasoBanco(repAsig, repCont, repTipo);
+}
+function pintarRepQuiz(items){
+  const b=document.getElementById('repBody'); let h='';
+  (items||[]).forEach(function(p,idx){
+    h+='<div class="rep-q"><div class="q">'+(idx+1)+'. '+p.pregunta+'</div>';
+    (p.opciones||[]).forEach(function(op,i){ h+='<button class="rep-op" onclick="repQuizResp(this,'+i+','+p.correcta+')">'+op+'</button>'; });
+    h+='</div>';
+  });
+  b.innerHTML=h||'<div class="rep-load">Sin preguntas cargadas.</div>';
+}
+function repQuizResp(btn,elegido,correcta){
+  const c=btn.parentNode; if(c.dataset.r)return; c.dataset.r='1';
+  const ops=c.querySelectorAll('.rep-op');
+  ops.forEach(function(o,i){ if(i===correcta)o.classList.add('ok'); });
+  if(elegido!==correcta) ops[elegido].classList.add('mal');
+}
+function pintarRepFlash(items){
+  const b=document.getElementById('repBody');
+  let h='<p style="font-size:13px;color:#5a6478;margin-bottom:10px">Toca cada tarjeta para darla vuelta.</p><div class="rep-flashgrid">';
+  (items||[]).forEach(function(c){
+    h+='<div class="rep-flash" onclick="this.classList.toggle(\'flip\')"><div class="rf-in">'+
+       '<div class="rf-front">'+c.frente+'</div><div class="rf-back">'+c.reverso+'</div></div></div>';
+  });
+  h+='</div>'; b.innerHTML=(items&&items.length)?h:'<div class="rep-load">Sin tarjetas cargadas.</div>';
+}
+function pintarRepVF(items){
+  const b=document.getElementById('repBody'); let h='';
+  (items||[]).forEach(function(p,idx){
+    const pq=String(p.porque||'').replace(/'/g,"\\'");
+    h+='<div class="rep-q"><div class="q">'+(idx+1)+'. '+p.afirmacion+'</div><div class="rep-vf">'+
+       '<button onclick="repVFResp(this,true,'+p.esVerdadero+',\''+pq+'\')">Verdadero</button>'+
+       '<button onclick="repVFResp(this,false,'+p.esVerdadero+',\''+pq+'\')">Falso</button>'+
+       '</div><div class="rep-porque"></div></div>';
+  });
+  b.innerHTML=h||'<div class="rep-load">Sin preguntas cargadas.</div>';
+}
+function repVFResp(btn,elegido,correcta,porque){
+  const cont=btn.parentNode.parentNode; if(cont.dataset.r)return; cont.dataset.r='1';
+  const bien=(elegido===correcta);
+  btn.style.background=bien?'#e6f4ee':'#ffe9e9'; btn.style.color=bien?'#006c4a':'#ba1a1a';
+  const pq=cont.querySelector('.rep-porque'); pq.style.display='block';
+  pq.textContent=(bien?'Correcto. ':'Incorrecto. ')+porque;
+}
+function pintarRepCompletar(items){
+  const b=document.getElementById('repBody'); let h='';
+  (items||[]).forEach(function(p,idx){
+    const resp=String(p.respuesta||'').replace(/'/g,"\\'");
+    h+='<div class="rep-q"><div class="q">'+(idx+1)+'. '+String(p.frase||'').replace('___','_____')+'</div>'+
+       '<input class="rep-input" id="rc'+idx+'" placeholder="Escribe aquí">'+
+       '<button class="rep-btn" onclick="repCompResp('+idx+',\''+resp+'\')">Comprobar</button>'+
+       '<div class="rep-porque" id="rcp'+idx+'"></div></div>';
+  });
+  b.innerHTML=h||'<div class="rep-load">Sin preguntas cargadas.</div>';
+}
+function repCompResp(idx,resp){
+  const inp=document.getElementById('rc'+idx),pq=document.getElementById('rcp'+idx);
+  const bien=inp.value.trim().toLowerCase()===String(resp).trim().toLowerCase();
+  pq.style.display='block'; pq.textContent=bien?'Correcto!':'Era: '+resp;
+  inp.style.borderColor=bien?'#006c4a':'#ba1a1a';
+}
+function pintarRepAdivinanza(items){
+  const b=document.getElementById('repBody'); let h='';
+  (items||[]).forEach(function(p,idx){
+    h+='<div class="rep-q"><div class="q">'+p.pista+'</div>'+
+       '<button class="rep-btn" onclick="var s=document.getElementById(\'rad'+idx+'\');s.style.display=(s.style.display===\'block\'?\'none\':\'block\')">Ver respuesta</button>'+
+       '<div class="rep-porque" id="rad'+idx+'">'+p.respuesta+'</div></div>';
+  });
+  b.innerHTML=h||'<div class="rep-load">Sin adivinanzas cargadas.</div>';
+}
+
+cargar();
+</script>
+
+<!-- Ventana de repaso por examen -->
+<div class="rep-modal-bg" id="repModalBg">
+  <div class="rep-modal">
+    <div class="rep-modal-head">
+      <div><h3 id="repTitulo">📖 Estudiar</h3><div id="repSub" style="font-size:12px;opacity:.85"></div></div>
+      <button class="cerrar" onclick="cerrarRepaso()"><span class="material-symbols-outlined">close</span></button>
+    </div>
+    <div class="rep-modal-body">
+      <div class="rep-tipos" id="repTipos"></div>
+      <div id="repBody"></div>
+      <div style="text-align:center;margin-top:10px">
+        <button class="rep-btn sec" onclick="cargarRepaso()"><span class="material-symbols-outlined">refresh</span>Otro repaso nuevo</button>
+      </div>
+    </div>
+  </div>
+</div>
+<style>
+.estudiar-btn{margin-top:10px;display:inline-flex;align-items:center;gap:6px;background:#1a73e8;color:#fff;border:none;border-radius:20px;padding:8px 16px;font-size:13px;font-weight:700;cursor:pointer;}
+.estudiar-btn .material-symbols-outlined{font-size:17px;}
+.rep-modal-bg{position:fixed;inset:0;background:rgba(0,0,0,.4);z-index:75;display:none;align-items:center;justify-content:center;padding:16px;}
+.rep-modal-bg.abierto{display:flex;}
+.rep-modal{background:#fff;border-radius:20px;max-width:640px;width:100%;max-height:92vh;overflow-y:auto;box-shadow:0 12px 40px rgba(0,0,0,.25);}
+.rep-modal-head{background:linear-gradient(120deg,#1a73e8,#0b3d91);color:#fff;padding:18px 20px;display:flex;justify-content:space-between;align-items:flex-start;position:sticky;top:0;z-index:2;}
+.rep-modal-head h3{font-family:'Quicksand',sans-serif;font-size:19px;font-weight:700;}
+.rep-modal-head .cerrar{background:none;border:none;cursor:pointer;color:#fff;padding:4px;}
+.rep-modal-body{padding:20px;}
+.rep-tipos{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px;}
+.rep-tipo{border:1px solid #d4dae6;background:#fff;border-radius:20px;padding:8px 14px;cursor:pointer;font-size:13px;font-weight:700;color:#424655;}
+.rep-tipo.on{background:#1a73e8;color:#fff;border-color:#1a73e8;}
+.rep-q{background:#f7f9fb;border-radius:14px;padding:14px;margin-bottom:12px;}
+.rep-q .q{font-weight:700;font-size:15px;margin-bottom:10px;}
+.rep-op{display:block;width:100%;text-align:left;border:1.5px solid #d4dae6;background:#fff;border-radius:12px;padding:10px 12px;margin-bottom:8px;cursor:pointer;font-size:14px;transition:.15s;}
+.rep-op:hover{border-color:#1a73e8;}
+.rep-op.ok{background:#e6f4ee;border-color:#006c4a;color:#006c4a;font-weight:700;}
+.rep-op.mal{background:#ffe9e9;border-color:#ba1a1a;color:#ba1a1a;}
+.rep-vf{display:flex;gap:8px;}
+.rep-vf button{flex:1;border:1.5px solid #d4dae6;background:#fff;border-radius:12px;padding:10px;cursor:pointer;font-weight:700;}
+.rep-porque{font-size:12px;color:#5a6478;margin-top:8px;display:none;background:#eef4ff;padding:8px;border-radius:8px;}
+.rep-input{width:100%;border:1.5px solid #d4dae6;border-radius:12px;padding:10px;font-size:14px;margin-bottom:8px;}
+.rep-btn{display:inline-flex;align-items:center;gap:6px;background:#1a73e8;color:#fff;border:none;border-radius:20px;padding:8px 14px;font-size:13px;font-weight:700;cursor:pointer;}
+.rep-btn.sec{background:#eef1f7;color:#1a73e8;}
+.rep-btn .material-symbols-outlined{font-size:16px;}
+.rep-load{text-align:center;padding:30px;color:#5a6478;}
+.rep-flashgrid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;}
+.rep-flash{perspective:800px;height:110px;cursor:pointer;}
+.rep-flash .rf-in{position:relative;width:100%;height:100%;transition:transform .5s;transform-style:preserve-3d;}
+.rep-flash.flip .rf-in{transform:rotateY(180deg);}
+.rf-front,.rf-back{position:absolute;inset:0;backface-visibility:hidden;border-radius:14px;display:flex;align-items:center;justify-content:center;text-align:center;padding:10px;font-size:13px;font-weight:700;}
+.rf-front{background:#1a73e8;color:#fff;}
+.rf-back{background:#e6f4ee;color:#006c4a;transform:rotateY(180deg);}
+@media(max-width:600px){.rep-flashgrid{grid-template-columns:1fr;}}
+</style>
+
+
+</body>
+</html>
