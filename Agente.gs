@@ -97,6 +97,9 @@ function correrAgente_(ss){
       return;
     }
 
+    // MISMA lista de candidatos que se le mostró a la IA (mismo orden = el número calza)
+    const cands = candidatosAFecha_(ss, asig, fechaCorreo);
+
     analisis.eventos.forEach(ev=>{
       const tipo=ev.tipo||'Aviso';
 
@@ -110,7 +113,7 @@ function correrAgente_(ss){
       }
 
       // Cambios de fecha / suspension: se APLICAN si son seguros
-      const res = aplicarCambioSeguro_(ss, asig, ev, fechaCorreo, id);
+      const res = aplicarCambioSeguro_(ss, asig, ev, fechaCorreo, id, cands);
       hAg.appendRow([new Date(), asig, tipo, ev.deteccion||'', res.accion, res.estado, id,
                      ev.detalle||'', ev.fecha||'', res.objetivo||'', fCorreoTxt, extracto]);
       novedades++;
@@ -130,50 +133,53 @@ function correrAgente_(ss){
  *     deja propuesta para que el usuario elija.
  *  4. Cada cambio guarda el correo que lo respalda.
  *************************************************************/
-function aplicarCambioSeguro_(ss, asig, ev, fechaCorreo, idCorreo){
+function aplicarCambioSeguro_(ss, asig, ev, fechaCorreo, idCorreo, candsIn){
   const tipo=ev.tipo||'Aviso';
 
-  // Exámenes de ESTA asignatura, vigentes a la fecha del correo
-  const cands=candidatosAFecha_(ss, asig, fechaCorreo);
+  // Exámenes de ESTA asignatura, vigentes a la fecha del correo (mismo orden que vio la IA)
+  const cands = candsIn || candidatosAFecha_(ss, asig, fechaCorreo);
 
-  // Determina a qué examen se refiere
-  let objetivo=null;
-  if(ev.examen_contenido){
-    // valida que ese contenido exista EN ESTA asignatura
-    const encontrado=cands.filter(c=>
-      c.contenido.toLowerCase().trim()===String(ev.examen_contenido).toLowerCase().trim());
-    if(encontrado.length) objetivo=encontrado[0].contenido;
-    else {
-      // busca en toda la asignatura (puede ser un examen ya pasado)
-      const todos=examenesDeAsignaturaConFecha_(ss, asig);
-      const e2=todos.filter(c=>
-        c.contenido.toLowerCase().trim()===String(ev.examen_contenido).toLowerCase().trim());
-      if(e2.length) objetivo=e2[0].contenido;
+  // === Emparejamiento por NÚMERO de candidato (robusto), con respaldos ===
+  let objetivo=null, fechaAntes=null;
+  const num=parseInt(ev.examen_num,10);
+  if(num>=1 && cands[num-1]){ objetivo=cands[num-1].contenido; fechaAntes=cands[num-1].fecha; }
+
+  // Respaldo 1: por contenido exacto (por si la IA mandó el nombre en vez del número)
+  if(!objetivo && ev.examen_contenido){
+    const q=String(ev.examen_contenido).toLowerCase().trim();
+    let m=cands.filter(c=>c.contenido.toLowerCase().trim()===q);
+    if(!m.length){ // puede ser un examen ya pasado: busca en toda la asignatura
+      m=examenesDeAsignaturaConFecha_(ss, asig).filter(c=>c.contenido.toLowerCase().trim()===q);
     }
+    if(m.length){ objetivo=m[0].contenido; fechaAntes=m[0].fecha; }
   }
-  // Si no lo identificó pero hay UN SOLO candidato en esta asignatura → es ese
-  if(!objetivo && cands.length===1) objetivo=cands[0].contenido;
+  // Respaldo 2: si hay UN SOLO candidato en esta asignatura → es ese
+  if(!objetivo && cands.length===1){ objetivo=cands[0].contenido; fechaAntes=cands[0].fecha; }
+
+  const fmt = x => x ? Utilities.formatDate(new Date(x),'GMT-3','dd/MM') : '?';
 
   if(tipo==='Suspensión'){
     if(objetivo){
       const ok=marcarEstadoExamen_(ss, asig, objetivo, 'SUSPENDIDA');
-      return ok ? {accion:'Marcada como suspendida', estado:'aplicado', objetivo:objetivo}
-                : {accion:'No se ubicó el examen', estado:'propuesta'};
+      return ok ? {accion:'🚫 Suspendida automáticamente', estado:'aplicado', objetivo:objetivo}
+                : {accion:'No se ubicó el examen', estado:'propuesta', objetivo:objetivo};
     }
     return {accion:'Suspensión — elige a cuál evaluación aplicarla', estado:'propuesta'};
   }
 
-  if((tipo==='Examen movido' || tipo==='Evaluación nueva') && ev.fecha){
-    const f=parsearFechaISO_(ev.fecha);
-    if(!f) return {accion:'Fecha ilegible', estado:'propuesta'};
+  if(tipo==='Examen movido' || tipo==='Evaluación nueva'){
+    const f = ev.fecha ? parsearFechaISO_(ev.fecha) : null;
+    if(!f) return {accion:'Fecha no clara — revisa el correo y elige la fecha', estado:'propuesta', objetivo:objetivo||''};
 
     if(objetivo){
+      // Alta confianza: se aplica sola, con "antes → después"
       ajustarExamenPorContenido_(ss, asig, objetivo, f);
       ordenarExamenes_(ss);
       guardarRespaldo_(ss, asig, objetivo, idCorreo);
-      return {accion:'✅ Fecha aplicada automáticamente ('+ev.fecha+')', estado:'aplicado', objetivo:objetivo};
+      return {accion:'✅ Fecha aplicada: '+fmt(fechaAntes)+' → '+fmt(f), estado:'aplicado', objetivo:objetivo};
     }
-    return {accion:'Cambio de fecha — hay varias evaluaciones posibles, elige cuál', estado:'propuesta'};
+    // Fecha clara pero no se sabe CUÁL examen → propuesta (no adivina)
+    return {accion:'Cambio a '+fmt(f)+' — elige a cuál evaluación', estado:'propuesta'};
   }
 
   return {accion:'Registrado — revisar', estado:'propuesta'};
@@ -219,11 +225,13 @@ function analizarCorreoAgente_(ss, asig, texto, fechaCorreo){
   const key=obtenerClaveGemini_();
   if(!key) return null;
 
-  const lista=examenesDeAsignaturaConFecha_(ss, asig);
-  const bloqueExam = lista.length
-    ? '\n\nEVALUACIONES DE ESTA ASIGNATURA (contenido exacto | fecha en el plan):\n'+
-      lista.map(c=>'- '+c.contenido+' | '+(c.fecha?Utilities.formatDate(c.fecha,'GMT-3','dd/MM/yyyy'):'sin fecha')).join('\n')+'\n'
-    : '';
+  // Candidatos vigentes a la fecha del correo, NUMERADOS. El mismo orden se usa al aplicar.
+  const cands=candidatosAFecha_(ss, asig, fechaCorreo);
+  const bloqueExam = cands.length
+    ? '\n\nEVALUACIONES POSIBLES DE ESTA ASIGNATURA (elige por su número):\n'+
+      cands.map((c,i)=>(i+1)+') '+c.contenido+' — fecha actual '+
+        (c.fecha?Utilities.formatDate(c.fecha,'GMT-3','dd/MM/yyyy'):'sin fecha')).join('\n')+'\n'
+    : '\n\n(No hay evaluaciones próximas registradas para esta asignatura.)\n';
 
   const fTxt = fechaCorreo ? Utilities.formatDate(new Date(fechaCorreo),'GMT-3','dd/MM/yyyy') : '';
 
@@ -233,12 +241,16 @@ function analizarCorreoAgente_(ss, asig, texto, fechaCorreo){
     'Devuelve SOLO un JSON válido, sin texto ni ```.\n\n'+
     '{ "eventos": [ ... ] }. Cada evento:\n'+
     '- "tipo": "Examen movido" | "Suspensión" | "Cambio de temario" | "Material nuevo" | "Evaluación nueva".\n'+
-    '- "examen_contenido": el contenido EXACTO de la lista de abajo al que se refiere, o null si no se puede saber.\n'+
+    '- "examen_num": el NÚMERO de la evaluación de la lista de abajo a la que se refiere (1, 2, 3...), '+
+    'o null si el correo no permite saber con certeza cuál es.\n'+
+    '- "examen_contenido": el texto de esa evaluación (cópialo de la lista), o null.\n'+
     '- "fecha": la nueva fecha en "YYYY-MM-DD" (año 2026) si el correo la menciona, o null.\n'+
     '- "deteccion": frase corta y literal de lo que dice el correo (cita el dato clave).\n'+
     '- "detalle": material a traer, si aplica.\n\n'+
     'REGLAS ESTRICTAS:\n'+
     '· Solo reporta un evento si el correo REALMENTE lo dice. No deduzcas ni inventes.\n'+
+    '· Para elegir "examen_num" usa el TEMA o la FECHA ORIGINAL que menciona el correo. '+
+    'Si el correo no da pistas suficientes para saber cuál es, deja "examen_num": null (NO adivines).\n'+
     '· Si el correo solo cuenta lo que se hizo en clases o comparte material, NO es un cambio de fecha.\n'+
     '· "Examen movido" solo si se indica una nueva fecha. "Suspensión" solo si se cancela sin nueva fecha.\n'+
     '· Si no hay nada relevante, devuelve { "eventos": [] }.'+
