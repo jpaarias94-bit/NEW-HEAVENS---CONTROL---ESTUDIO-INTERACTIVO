@@ -36,6 +36,7 @@ function crearMenu_(){
     .addItem('♻️ Restaurar plan oficial del colegio','restaurarPlanOficial')
     .addItem('♻️ Reprocesar temas y materiales','reprocesarAnuncios')
     .addItem('📎 Descargar documentos de Classroom','descargarDocumentosClassroom')
+    .addItem('🧠 Resumir documentos pendientes','resumirDocumentosPendientes')
     .addItem('📄 Procesar PDFs de asignaturas','procesarPDFs')
     .addItem('🗂️ Crear carpetas por examen (Drive)','crearCarpetasPorExamen')
     .addItem('🧹 Limpiar anuncios duplicados','limpiarDuplicados')

@@ -75,11 +75,8 @@ function procesarMaterialesAnuncio_(ss, asig, announcement, fecha){
         if(!carpeta) carpeta=carpetaDeAsignatura_(ss, asig);
         const copia=DriveApp.getFileById(df.id).makeCopy(titulo, carpeta);
         fileId=copia.getId(); link=copia.getUrl();
-        const ct=copia.getBlob().getContentType();
-        if(ct==='application/pdf' || /\.pdf$/i.test(titulo)){
-          const r=analizarPDFconIA_(asig, copia);            // reusa el resumen IA de MaterialPDF.gs
-          if(r){ resumen=r.resumen||''; temas=(r.temas||[]).join(', '); }
-        }
+        const r=analizarArchivoConIA_(asig, copia, copia.getMimeType());  // PDF, Docs, Slides, .docx, imágenes
+        if(r){ resumen=r.resumen||''; temas=(r.temas||[]).join(', '); }
       }catch(e){ resumen='(no se pudo descargar: '+e.message+')'; }
 
       const examen=examenParaDocumento_(ss, asig, titulo, resumen);
@@ -105,6 +102,94 @@ function procesarMaterialesAnuncio_(ss, asig, announcement, fecha){
       n++;
     }
   });
+  return n;
+}
+
+/*************************************************************
+ * RESUMEN IA GENERAL — lee PDF, Google Docs/Slides, .docx e imágenes.
+ * Convierte lo que puede a PDF y se lo pasa a Gemini; las imágenes van
+ * directo. Devuelve { resumen, temas:[...] } o null si no se pudo leer.
+ *************************************************************/
+function analizarArchivoConIA_(asig, file, mime){
+  const key=obtenerClaveGemini_();
+  if(!key) return null;
+  mime = mime || (function(){ try{ return file.getMimeType(); }catch(e){ return ''; } })();
+
+  // Arma la "parte" que entiende Gemini (imagen directa, o PDF)
+  let parte=null;
+  try{
+    if(mime && mime.indexOf('image/')===0){
+      parte={ inlineData:{ mimeType:mime, data:Utilities.base64Encode(file.getBlob().getBytes()) } };
+    } else if(mime==='application/pdf'){
+      parte={ inlineData:{ mimeType:'application/pdf', data:Utilities.base64Encode(file.getBlob().getBytes()) } };
+    } else {
+      // Google Docs/Slides y Office (.docx/.pptx): exportar a PDF
+      const pdf=file.getAs('application/pdf');
+      parte={ inlineData:{ mimeType:'application/pdf', data:Utilities.base64Encode(pdf.getBytes()) } };
+    }
+  }catch(e){ _ultimoErrorGemini='No se pudo convertir a PDF: '+e.message; return null; }
+
+  const instruccion=
+    'Eres un asistente educativo. Este es material de la asignatura "'+asig+'" (4° básico). '+
+    'Responde SOLO con JSON válido, sin texto ni ```:\n'+
+    '- "resumen": 2-3 frases claras de qué contenido educativo cubre.\n'+
+    '- "temas": lista de los temas o conceptos principales.\n'+
+    'Escribe en español, para que un apoderado entienda qué estudia su hijo.';
+
+  const payload={ contents:[{ parts:[ parte, { text:instruccion } ] }],
+    generationConfig:{ temperature:0.2, maxOutputTokens:1000, responseMimeType:'application/json' } };
+  const url='https://generativelanguage.googleapis.com/v1beta/models/'+obtenerModeloGemini_()+':generateContent';
+
+  try{
+    let resp, intentos=0;
+    do{
+      resp=UrlFetchApp.fetch(url,{ method:'post', contentType:'application/json',
+        headers:{ 'x-goog-api-key':key }, payload:JSON.stringify(payload), muteHttpExceptions:true });
+      const c=resp.getResponseCode();
+      if(c===503||c===429){ intentos++; Utilities.sleep(3000); } else break;
+    } while(intentos<3);
+    if(resp.getResponseCode()!==200){ _ultimoErrorGemini='HTTP '+resp.getResponseCode(); return null; }
+    const obj=extraerJSONAgente_(resp.getContentText());
+    if(!obj) return null;
+    return { resumen:obj.resumen||'', temas:Array.isArray(obj.temas)?obj.temas:[] };
+  }catch(e){ _ultimoErrorGemini='Excepción: '+e.message; return null; }
+}
+
+/*************************************************************
+ * BOTÓN DE MENÚ — resume los documentos ya descargados que aún no
+ * tienen resumen (los que quedaron en estado "Descargado").
+ *************************************************************/
+function resumirDocumentosPendientes(){
+  const ss=SpreadsheetApp.getActiveSpreadsheet();
+  const h=ss.getSheetByName('Documentos');
+  if(!h || h.getLastRow()<2){ try{ SpreadsheetApp.getUi().alert('No hay documentos.'); }catch(e){}; return 0; }
+
+  const enc=h.getRange(1,1,1,h.getLastColumn()).getValues()[0];
+  const col=n=>enc.indexOf(n);
+  const cAsig=col('Asignatura'), cExamen=col('Examen'), cArchivo=col('Archivo'),
+        cTipo=col('Tipo'), cResumen=col('Resumen'), cTemas=col('Temas'),
+        cFileId=col('FileId'), cEstado=col('Estado');
+
+  const filas=h.getRange(2,1,h.getLastRow()-1,h.getLastColumn()).getValues();
+  let n=0, err=0;
+  for(let i=0;i<filas.length;i++){
+    const r=filas[i];
+    if(String(r[cResumen]||'').trim()) continue;                 // ya tiene resumen
+    if(r[cTipo]!=='Archivo' || !r[cFileId]) continue;            // enlaces/videos no se resumen
+    let file; try{ file=DriveApp.getFileById(String(r[cFileId])); }catch(e){ err++; continue; }
+    const res=analizarArchivoConIA_(r[cAsig], file, file.getMimeType());
+    if(res && res.resumen){
+      h.getRange(i+2,cResumen+1).setValue(res.resumen);
+      h.getRange(i+2,cTemas+1).setValue((res.temas||[]).join(', '));
+      const ex=examenParaDocumento_(ss, r[cAsig], r[cArchivo], res.resumen);
+      if(ex && !String(r[cExamen]||'').trim()) h.getRange(i+2,cExamen+1).setValue(ex);
+      h.getRange(i+2,cEstado+1).setValue('Procesado');
+      n++;
+    } else err++;
+    Utilities.sleep(1200);                                        // respeta cuota Gemini
+  }
+  try{ SpreadsheetApp.getUi().alert('Documentos resumidos: '+n+(err?('\nNo se pudieron leer: '+err):'')+
+    '\n\nSi quedaron pendientes (límite de tiempo), vuelve a ejecutar y continúa donde quedó.'); }catch(e){}
   return n;
 }
 
