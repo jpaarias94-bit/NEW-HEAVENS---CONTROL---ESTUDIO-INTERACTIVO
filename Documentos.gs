@@ -106,6 +106,58 @@ function procesarMaterialesAnuncio_(ss, asig, announcement, fecha){
 }
 
 /*************************************************************
+ * DIAGNÓSTICO — revisa 1 documento pendiente y muestra el error exacto.
+ * Ejecútala desde el editor (▶) o desde el menú. NO cambia nada.
+ *************************************************************/
+function diagnosticarDocumento(){
+  const ss=SpreadsheetApp.getActiveSpreadsheet();
+  const h=ss.getSheetByName('Documentos');
+  if(!h || h.getLastRow()<2){ SpreadsheetApp.getUi().alert('No hay documentos.'); return; }
+  const enc=h.getRange(1,1,1,h.getLastColumn()).getValues()[0];
+  const col=n=>enc.indexOf(n);
+  const filas=h.getRange(2,1,h.getLastRow()-1,h.getLastColumn()).getValues();
+
+  let fila=null;
+  for(const r of filas){
+    if(r[col('Tipo')]==='Archivo' && r[col('FileId')] && !String(r[col('Resumen')]||'').trim()){ fila=r; break; }
+  }
+  if(!fila){ SpreadsheetApp.getUi().alert('No hay archivos pendientes de resumen.'); return; }
+
+  let msg='ARCHIVO: '+fila[col('Archivo')]+'\nAsignatura: '+fila[col('Asignatura')]+'\n';
+  let file;
+  try{ file=DriveApp.getFileById(String(fila[col('FileId')])); }
+  catch(e){ SpreadsheetApp.getUi().alert(msg+'\n❌ No se pudo abrir el archivo: '+e.message); return; }
+  const mime=file.getMimeType();
+  msg+='MIME: '+mime+'\n';
+
+  // 1) ¿Clave Gemini?
+  const key=obtenerClaveGemini_();
+  msg+='Clave Gemini: '+(key?'OK':'❌ FALTA')+'\n';
+  msg+='Modelo: '+obtenerModeloGemini_()+'\n\n';
+
+  // 2) ¿Se puede convertir/leer el archivo?
+  let parte=null, convOk='';
+  try{
+    if(mime.indexOf('image/')===0){ parte={inlineData:{mimeType:mime,data:Utilities.base64Encode(file.getBlob().getBytes())}}; convOk='imagen directa OK'; }
+    else if(mime==='application/pdf'){ parte={inlineData:{mimeType:'application/pdf',data:Utilities.base64Encode(file.getBlob().getBytes())}}; convOk='PDF directo OK'; }
+    else { const pdf=file.getAs('application/pdf'); parte={inlineData:{mimeType:'application/pdf',data:Utilities.base64Encode(pdf.getBytes())}}; convOk='convertido a PDF OK'; }
+  }catch(e){ SpreadsheetApp.getUi().alert(msg+'❌ FALLA EN LA CONVERSIÓN A PDF:\n'+e.message); return; }
+  msg+='Conversión: '+convOk+'\n\n';
+
+  // 3) Llamada a Gemini
+  const payload={ contents:[{ parts:[ parte, { text:'Resume en JSON {"resumen":"...","temas":[]} en español.' } ] }],
+    generationConfig:{ temperature:0.2, maxOutputTokens:800, responseMimeType:'application/json' } };
+  const url='https://generativelanguage.googleapis.com/v1beta/models/'+obtenerModeloGemini_()+':generateContent';
+  try{
+    const resp=UrlFetchApp.fetch(url,{ method:'post', contentType:'application/json',
+      headers:{ 'x-goog-api-key':key }, payload:JSON.stringify(payload), muteHttpExceptions:true });
+    msg+='Gemini HTTP: '+resp.getResponseCode()+'\n';
+    msg+='Respuesta: '+resp.getContentText().slice(0,400);
+  }catch(e){ msg+='❌ Excepción llamando a Gemini: '+e.message; }
+  SpreadsheetApp.getUi().alert(msg);
+}
+
+/*************************************************************
  * RESUMEN IA GENERAL — lee PDF, Google Docs/Slides, .docx e imágenes.
  * Convierte lo que puede a PDF y se lo pasa a Gemini; las imágenes van
  * directo. Devuelve { resumen, temas:[...] } o null si no se pudo leer.
