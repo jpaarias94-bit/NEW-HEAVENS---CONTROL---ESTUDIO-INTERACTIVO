@@ -238,7 +238,7 @@ function resumirDocumentosPendientes(){
       h.getRange(i+2,cEstado+1).setValue('Procesado');
       n++;
     } else err++;
-    Utilities.sleep(1200);                                        // respeta cuota Gemini
+    Utilities.sleep(4500);                                        // ~13/min: respeta el límite gratis de Gemini
   }
   try{ SpreadsheetApp.getUi().alert('Documentos resumidos: '+n+(err?('\nNo se pudieron leer: '+err):'')+
     '\n\nSi quedaron pendientes (límite de tiempo), vuelve a ejecutar y continúa donde quedó.'); }catch(e){}
