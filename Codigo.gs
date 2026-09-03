@@ -35,6 +35,7 @@ function crearMenu_(){
     .addItem('🕵️ Revisar correos (proponer cambios)','ejecutarAgente')
     .addItem('♻️ Restaurar plan oficial del colegio','restaurarPlanOficial')
     .addItem('♻️ Reprocesar temas y materiales','reprocesarAnuncios')
+    .addItem('📎 Descargar documentos de Classroom','descargarDocumentosClassroom')
     .addItem('📄 Procesar PDFs de asignaturas','procesarPDFs')
     .addItem('🗂️ Crear carpetas por examen (Drive)','crearCarpetasPorExamen')
     .addItem('🧹 Limpiar anuncios duplicados','limpiarDuplicados')
@@ -137,6 +138,9 @@ function sincronizarClassroom(){
 
       hAnun.appendRow([fecha,asig,curso.name,texto,id,numAdj,link,exFecha,exCont]);
       nuevos++;
+
+      // P2: descarga a Drive + resumen IA de los adjuntos de este anuncio
+      try{ if(typeof procesarMaterialesAnuncio_==='function') procesarMaterialesAnuncio_(ss, asig, a, fecha); }catch(e){}
     });
   });
 
@@ -342,6 +346,7 @@ function obtenerDatos(){
   return {
     examenes:leerHoja_(ss,'Examenes'),
     anuncios:leerAnunciosLigero_(ss),
+    documentos:(typeof leerDocumentos_==='function'?leerDocumentos_(ss):[]),
     agente:(typeof leerBitacoraAgente_==='function'?leerBitacoraAgente_(ss):[]),
     auto:(function(){ try{ return (typeof estadoAutomatizacion==='function')?estadoAutomatizacion():null; }catch(e){ return null; } })(),
     hoy:new Date().toISOString()
