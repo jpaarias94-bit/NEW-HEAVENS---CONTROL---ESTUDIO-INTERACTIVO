@@ -6,7 +6,7 @@
  *  (Se saca gratis en https://aistudio.google.com → Get API key)
  *************************************************************/
 
-const GEMINI_MODELO_DEFECTO = 'gemini-2.0-flash';  // respaldo estable
+const GEMINI_MODELO_DEFECTO = 'gemini-3.6-flash';  // modelo vigente (2.0 fue retirado por Google)
 
 function obtenerModeloGemini_(){
   const h=SpreadsheetApp.getActiveSpreadsheet().getSheetByName('Config');
