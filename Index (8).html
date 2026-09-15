@@ -102,6 +102,12 @@ header.apphead p{opacity:.9;font-size:14px;margin-top:4px;}
 .sp-doc .texto{font-size:13px;color:#1a2233;margin:6px 0 10px;white-space:pre-wrap;}
 .sp-btn{display:inline-flex;align-items:center;gap:6px;text-decoration:none;background:#e8a800;color:#fff;padding:8px 14px;border-radius:20px;font-size:13px;font-weight:700;}
 .sp-btn .material-symbols-outlined{font-size:16px;}
+.sp-btn-sec{background:#eef1f7;color:#004bc3;}
+.sp-doc .sp-sub{font-size:12px;color:#8894a8;font-weight:600;margin:2px 0 8px;}
+.sp-temas{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:10px;}
+.sp-chip{background:#eef1f7;color:#424655;border-radius:20px;padding:3px 10px;font-size:11px;font-weight:600;}
+.sp-examen{font-size:12px;color:#004bc3;font-weight:700;margin-bottom:10px;}
+.sp-acc{display:flex;gap:8px;flex-wrap:wrap;}
 .overlay-bg{position:fixed;inset:0;background:rgba(0,0,0,.25);z-index:55;opacity:0;pointer-events:none;transition:opacity .3s;}
 .overlay-bg.abierto{opacity:1;pointer-events:auto;}
 .doc-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:16px;transition:margin-right .3s ease;}
@@ -420,12 +426,20 @@ const ICONO_ASIG={'Matemática':'calculate','Lenguaje y Comunicación':'menu_boo
 const PALETA=[{bg:'#eaf1fe',fg:'#004bc3'},{bg:'#e6f4ee',fg:'#006c4a'},{bg:'#fdeede',fg:'#a65900'},{bg:'#ffe9e9',fg:'#ba1a1a'},{bg:'#f2e9fb',fg:'#7b1fa2'},{bg:'#fde8f0',fg:'#c2185b'}];
 function paletaAsig(a){let s=0;for(let i=0;i<a.length;i++)s+=a.charCodeAt(i);return PALETA[s%PALETA.length];}
 function iconoAsig(a){return ICONO_ASIG[a]||'folder';}
+
+// Convierte un link de vista de Drive en descarga directa; los enlaces externos quedan igual.
+function driveDownload(link){
+  if(!link) return '';
+  const m=String(link).match(/[-\w]{25,}/);
+  return m ? 'https://drive.google.com/uc?export=download&id='+m[0] : String(link);
+}
+function esArchivoDrive(d){ return String(d.Tipo||'')==='Archivo' && !!d.Link; }
+
 function docsPorAsignatura(){
-  const filtro=document.getElementById('filtroAsig').value;const map={};
-  (DATOS.anuncios||[]).forEach(a=>{
-    const adj=parseInt(a.Adjuntos)||0; if(adj<=0)return; if(!a.Link)return;
-    const asig=a.Asignatura||'General'; if(filtro && asig!==filtro)return;
-    (map[asig]=map[asig]||[]).push(a);
+  const filtro=document.getElementById('filtroAsig').value; const map={};
+  (DATOS.documentos||[]).forEach(d=>{
+    const asig=d.Asignatura||'General'; if(filtro && asig!==filtro)return;
+    (map[asig]=map[asig]||[]).push(d);
   });
   Object.keys(map).forEach(k=>map[k].sort((x,y)=>new Date(y.Fecha)-new Date(x.Fecha)));
   return map;
@@ -433,14 +447,14 @@ function docsPorAsignatura(){
 function renderDocumentos(){
   const cont=document.getElementById('documentos');
   const porAsig=docsPorAsignatura(); const asigs=Object.keys(porAsig).sort();
-  if(!asigs.length){cont.innerHTML='<p class="empty">Aún no hay correos con documentos para descargar.</p>';cerrarPanel();return;}
+  if(!asigs.length){cont.innerHTML='<p class="empty">Aún no hay documentos descargados.<br><small>Desde la planilla usa "📎 Descargar documentos de Classroom".</small></p>';cerrarPanel();return;}
   const conPanel=asigSel&&porAsig[asigSel]?'con-panel':'';
   let html='<div class="doc-grid '+conPanel+'" id="docGrid">';
   asigs.forEach(asig=>{
     const docs=porAsig[asig];const pal=paletaAsig(asig);const icono=iconoAsig(asig);const sel=asig===asigSel?'sel':'';
-    html+='<div class="doc-card '+sel+'" onclick="abrirPanel(\''+asig.replace(/'/g,"\\'")+'\')"><div class="corner" style="background:'+pal.fg+'"></div><div class="top"><div class="doc-ico" style="background:'+pal.bg+';color:'+pal.fg+'"><span class="material-symbols-outlined">'+icono+'</span></div><span class="doc-count" style="background:'+pal.bg+';color:'+pal.fg+';border-color:'+pal.fg+'33">'+docs.length+' correo(s)</span></div><h3>'+asig+'</h3><div class="verdocs">Ver documentos <span class="material-symbols-outlined" style="font-size:16px">chevron_right</span></div></div>';
+    html+='<div class="doc-card '+sel+'" onclick="abrirPanel(\''+asig.replace(/'/g,"\\'")+'\')"><div class="corner" style="background:'+pal.fg+'"></div><div class="top"><div class="doc-ico" style="background:'+pal.bg+';color:'+pal.fg+'"><span class="material-symbols-outlined">'+icono+'</span></div><span class="doc-count" style="background:'+pal.bg+';color:'+pal.fg+';border-color:'+pal.fg+'33">'+docs.length+' documento(s)</span></div><h3>'+asig+'</h3><div class="verdocs">Ver documentos <span class="material-symbols-outlined" style="font-size:16px">chevron_right</span></div></div>';
   });
-  html+='</div><p style="text-align:center;font-size:12px;color:#8894a8;margin-top:14px">Los documentos se abren en Classroom con la cuenta de Emmanuel.</p>';
+  html+='</div><p style="text-align:center;font-size:12px;color:#8894a8;margin-top:14px">Descarga directa desde Drive. El resumen "de qué trata" lo genera la IA a partir del material del profesor.</p>';
   cont.innerHTML=html;
   if(asigSel&&porAsig[asigSel])pintarPanel(asigSel,porAsig[asigSel]);
 }
@@ -457,14 +471,33 @@ function pintarPanel(asig,docs){
   spIco.style.background=pal.bg;spIco.style.color=pal.fg;
   spIco.innerHTML='<span class="material-symbols-outlined">'+icono+'</span>';
   document.getElementById('spTitulo').textContent=asig;
-  let html='<div class="sp-stat"><div class="n">'+docs.length+'</div><div class="l">correo(s) con documentos</div></div>';
-  docs.forEach(c=>{
-    const adj=parseInt(c.Adjuntos)||0;const linkEmm=linkConCuenta(c.Link||'');
-    const fTxt=new Date(c.Fecha).toLocaleDateString('es-CL',{weekday:'long',day:'2-digit',month:'long'});
-    const hora=new Date(c.Fecha).toLocaleTimeString('es-CL',{hour:'2-digit',minute:'2-digit'});
-    const resumen=(c.Texto||'').replace(/</g,'&lt;');
-    const rc=resumen.length>180?resumen.slice(0,180)+'…':resumen;
-    html+='<div class="sp-doc"><div class="fecha">📅 '+fTxt+' · '+hora+'</div><div class="texto">'+rc+'</div><a class="sp-btn" href="'+linkEmm+'" target="_blank"><span class="material-symbols-outlined">download</span>'+adj+' documento(s) — Descargar</a></div>';
+  let html='<div class="sp-stat"><div class="n">'+docs.length+'</div><div class="l">documento(s) descargado(s)</div></div>';
+  docs.forEach(d=>{
+    const fTxt=d.Fecha?new Date(d.Fecha).toLocaleDateString('es-CL',{day:'2-digit',month:'long',year:'numeric'}):'';
+    const nombre=String(d.Archivo||'Documento').replace(/</g,'&lt;');
+    const tipo=String(d.Tipo||'');
+    const resumen=String(d.Resumen||'').trim();
+    const resHtml = resumen
+      ? '<div class="texto">'+resumen.replace(/</g,'&lt;')+'</div>'
+      : '<div class="texto" style="font-style:italic;color:#8894a8">Resumen en preparación… (la IA lo completa cada pocas horas)</div>';
+    let temasHtml='';
+    const temas=String(d.Temas||'').split(',').map(t=>t.trim()).filter(Boolean);
+    if(temas.length){ temasHtml='<div class="sp-temas">'+temas.map(t=>'<span class="sp-chip">'+t.replace(/</g,'&lt;')+'</span>').join('')+'</div>'; }
+    const examen=String(d.Examen||'').trim();
+    const examenHtml = examen ? '<div class="sp-examen">🎯 Prueba vinculada: '+examen.replace(/</g,'&lt;')+'</div>' : '';
+    let btn='';
+    if(esArchivoDrive(d)){
+      btn='<a class="sp-btn" href="'+linkConCuenta(driveDownload(d.Link))+'" target="_blank"><span class="material-symbols-outlined">download</span>Descargar</a>'+
+          '<a class="sp-btn sp-btn-sec" href="'+linkConCuenta(d.Link)+'" target="_blank"><span class="material-symbols-outlined">visibility</span>Ver</a>';
+    } else if(d.Link){
+      const et = tipo==='Video' ? 'Ver video' : 'Abrir enlace';
+      btn='<a class="sp-btn" href="'+String(d.Link)+'" target="_blank"><span class="material-symbols-outlined">open_in_new</span>'+et+'</a>';
+    }
+    html+='<div class="sp-doc"><div class="fecha">📄 '+nombre+'</div>'+
+          '<div class="sp-sub">'+(fTxt?fTxt+' · ':'')+(tipo||'Documento')+'</div>'+
+          resHtml+temasHtml+examenHtml+
+          (btn?'<div class="sp-acc">'+btn+'</div>':'')+
+          '</div>';
   });
   document.getElementById('spBody').innerHTML=html;
 }
