@@ -21,6 +21,7 @@ Dos frentes: (A) herramientas de estudio + correos del colegio; (B) la app Apps 
 - **Geo Repaso (Mate: área, perímetro, volumen + sección Razona):** https://claude.ai/artifact/M9DtT4nByP4P2RpmNpuGgc
 - **SIMCE Mate (razonamiento):** https://claude.ai/artifact/9atr5VyM5cudzgUyuRjX2W
 - **Panel de Emmanuel (traspaso visual):** https://claude.ai/artifact/KZLtafEXLVvH6GvngFk9co
+- **Telón Arriba (Lenguaje: Género dramático, prueba 14-oct):** https://claude.ai/artifact/6w9Diq5X7kDqFv1Dhs5pW1 — _creada en Sesión 02 (en curso)_: lecciones, lecturas (4 obras de las guías + 2 nuevas), juegos y simulacro de 17 preguntas con nota 1,0–7,0.
 
 _Nota: los artefactos viven en claude.ai (privados de Juan), no en el repo. Para editarlos,
 la sesión nueva debe abrir el link y republicar sobre esa misma URL._
