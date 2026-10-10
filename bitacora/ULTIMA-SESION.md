@@ -18,7 +18,7 @@ Dos frentes: (A) herramientas de estudio + correos del colegio; (B) la app Apps 
 
 ### Herramientas hechas (artefactos de Claude, NO están en GitHub)
 - **Carta Gantt (plan de estudio):** https://claude.ai/artifact/3uuSh2dqogRP7N74yrP4kx
-- **Geo Repaso (Mate: área, perímetro, volumen + sección Razona):** https://claude.ai/artifact/M9DtT4nByP4P2RpmNpuGgc
+- **Geo Repaso (Mate + Tec 15-oct: perímetro, área, volumen):** https://claude.ai/artifact/M9DtT4nByP4P2RpmNpuGgc — _rehecha en Sesión 02 con el formato de Telón Arriba_: 8 lecciones, Suma los lados (11 figuras de la guía), Laboratorio de rectángulos, Cubos 3D, 8 repasos y simulacro de 19 preguntas (5 partes, incluye Tecnología) con nota 1,0–7,0.
 - **SIMCE Mate (razonamiento):** https://claude.ai/artifact/9atr5VyM5cudzgUyuRjX2W
 - **Panel de Emmanuel (traspaso visual):** https://claude.ai/artifact/KZLtafEXLVvH6GvngFk9co
 - **Telón Arriba (Lenguaje: Género dramático, prueba 14-oct):** https://claude.ai/artifact/6w9Diq5X7kDqFv1Dhs5pW1 — _creada en Sesión 02 (en curso)_: lecciones, lecturas (4 obras de las guías + 2 nuevas), juegos y simulacro de 17 preguntas con nota 1,0–7,0.
