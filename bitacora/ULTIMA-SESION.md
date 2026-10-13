@@ -72,3 +72,9 @@ y `ARRANQUE_COWORK.md` (casos de prueba del agente).
 - Ciencias: prueba el lunes 26-oct (materia, masa, volumen, estados).
 - Inglés: proyecto "Summer Camp Poster" en grupos, empieza vie 23-oct.
 - Interculturalidad: leyenda mapuche "Lágrimas de amor: la piedra cruz" (info, sin prueba).
+
+## Correos procesados en Sesión 02 (13-oct-2026) — Gantt actualizada
+- Mate: resultados ensayo n°7 (mínimo 220 / máx. 400). Actividad umaximo hasta **dom 18-oct**. **Llevar la guía de la última clase el mié 14** (revisión antes de la prueba del jue 15).
+- Lenguaje: repaso de género dramático el 13-oct (resumen en Classroom). Remedial umaximo "Refuerzo SIMCE n°7" hasta **dom 25-oct**.
+- Historia: vieron "encuentro de dos mundos" (12 de octubre); presentación y video en Classroom. Prueba 22-oct sigue sin confirmar.
+- Prueba de Mate del 8/9-oct: Juan iba a confirmar con Emmanuel (se dejó el jue 15 según correo de Orientación).
