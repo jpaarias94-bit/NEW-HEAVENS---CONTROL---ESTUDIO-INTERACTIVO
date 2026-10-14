@@ -78,3 +78,4 @@ y `ARRANQUE_COWORK.md` (casos de prueba del agente).
 - Lenguaje: repaso de género dramático el 13-oct (resumen en Classroom). Remedial umaximo "Refuerzo SIMCE n°7" hasta **dom 25-oct**.
 - Historia: vieron "encuentro de dos mundos" (12 de octubre); presentación y video en Classroom. Prueba 22-oct sigue sin confirmar.
 - Prueba de Mate del 8/9-oct: Juan iba a confirmar con Emmanuel (se dejó el jue 15 según correo de Orientación).
+- 14-oct: Lenguaje subió presentación "origen del teatro y su evolución" (cine mudo, teatro musical). Sin cambios de fechas. Gantt v8 publicada.
