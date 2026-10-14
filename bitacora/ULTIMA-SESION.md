@@ -79,3 +79,4 @@ y `ARRANQUE_COWORK.md` (casos de prueba del agente).
 - Historia: vieron "encuentro de dos mundos" (12 de octubre); presentación y video en Classroom. Prueba 22-oct sigue sin confirmar.
 - Prueba de Mate del 8/9-oct: Juan iba a confirmar con Emmanuel (se dejó el jue 15 según correo de Orientación).
 - 14-oct: Lenguaje subió presentación "origen del teatro y su evolución" (cine mudo, teatro musical). Sin cambios de fechas. Gantt v8 publicada.
+- 14-oct (WhatsApp apoderados, sin correo del colegio): **Lenguaje dramático movida a lun 19-oct** (no se tomó el 14). Mate: WhatsApp dice mié 14 vs correo jue 15 → POR CONFIRMAR. Vie 16 sin clases. Jue 15 regalo miss. Mié 21 premiación mejor compañero. Vie 23 Inglés: llevar 1 pliego cartulina clara + imágenes de campamentos y elementos de seguridad (grupal). Mar 27 English Week. Vie 30 sombrero loco de Australia (reciclado). Control del libro sin fecha. Gantt v9 y Telón Arriba (fecha 19-oct) publicadas.
