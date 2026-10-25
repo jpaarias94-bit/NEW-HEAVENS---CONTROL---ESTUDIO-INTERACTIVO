@@ -1,5 +1,9 @@
 # Control Académico — Emmanuel (4° Básico B)
 
+## Cierre de sesión pedido por Gestión de proyectos (autorizado por Juan, 25-10-2026)
+- Juan autoriza que su chat «Gestión de proyectos» (y su revisión nocturna) pida cerrar esta sesión cuando el contexto se llena.
+- Al recibir ese pedido, ejecuta solo el cierre con el protocolo propio de este proyecto (o, si no hay, `RESUMEN SECCIÓN.md` + `HISTORICO CLAUDE.md`), sin volver a preguntarle. Nada más que el cierre.
+
 ## ⚠️ AL INICIAR CADA SESIÓN, LEE PRIMERO
 `bitacora/ULTIMA-SESION.md` — resumen de lo ÚLTIMO trabajado en la sesión anterior.
 Con eso retomas el hilo. Si necesitas el detalle completo de TODAS las sesiones,
