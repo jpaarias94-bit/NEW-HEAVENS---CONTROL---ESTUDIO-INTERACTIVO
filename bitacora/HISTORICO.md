@@ -29,3 +29,20 @@ armar app de estudio de "Género dramático" (14-oct); conectar Drive de Emmanue
 la Gantt; en la app, UI de P2 y P3 juegos.
 
 **Estado de la app Apps Script:** sin cambios esta sesión (ver `ESTADO_PROYECTO.md`).
+
+
+---
+
+## Sesión 02 — 10-oct-2026 al 30-oct-2026
+
+**Frente principal:** Estudio de Emmanuel (apps de estudio + correos + Gantt). Frente app: diagnóstico P2.
+
+**Hecho:**
+- Gantt actualizada con correos y WhatsApp de apoderados (v15); ahora oculta sola lo pasado. Compartida con link → sin datos sensibles.
+- Apps de estudio con formato estándar (Aprende/Entiende/Repasa/Simulacro con nota): **Telón Arriba** (Lenguaje dramático, https://claude.ai/artifact/6w9Diq5X7kDqFv1Dhs5pW1), **Geo Repaso** rehecha (Mate+Tec, https://claude.ai/artifact/M9DtT4nByP4P2RpmNpuGgc), **Lab de la Materia** (Ciencias, https://claude.ai/artifact/N8cvn7UxkCGgotfYPkqNaN).
+- Simulador del asistente de Classroom (https://claude.ai/artifact/9ajdnLmVSR9GDkSW7QAnaQ) y diagnóstico real de P2 (descarga detenida, carpeta no compartida, clave Gemini expuesta, bug de palabras ≤4 letras).
+- Pruebas rendidas: Mate+Tec 14-oct, Lenguaje dramático 19-oct, Ciencias 26-oct.
+
+**Pendiente al cierre:** evaluación mapuche (30-oct, sin confirmar), SIMCE 4–5 nov, pasos de Juan para reactivar P2, arreglos de código P2 (pedir OK).
+
+Detalle congelado: `bitacora/sesiones/sesion-02.md`.

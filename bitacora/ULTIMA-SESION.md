@@ -1,88 +1,67 @@
 # ÚLTIMA SESIÓN — lo que debe leer la sesión nueva
 
-> Este archivo SIEMPRE refleja la sesión más reciente. Ahora contiene la **Sesión 01**.
-> Léelo completo y continúa desde los pendientes. Rama: `claude/gas-project-review-o399mb`.
+> Este archivo SIEMPRE refleja la sesión más reciente. Ahora contiene la **Sesión 02**.
+> Léelo completo y continúa desde los pendientes. Historial completo en `bitacora/HISTORICO.md`.
 
-**Sesión:** 01 · **Fecha de cierre:** 10-oct-2026 · **Usuario:** Juan (jpa.arias94@gmail.com)
+# Sesión 02 — 10-oct-2026 al 30-oct-2026
+
+**Usuario:** Juan (jpa.arias94@gmail.com) · **Rama:** `claude/gas-project-review-o399mb`
+**Cierre:** pedido por el chat «Gestión de proyectos» (autorizado en CLAUDE.md).
 
 ## Preferencias (recordar siempre)
 - Español. **NO NARRAR** pasos internos; solo resultado final + acciones a ejecutar.
 - Antes de cambios grandes: opciones y validar.
+- La Carta Gantt está compartida "con cualquiera que tenga el link": **no poner datos sensibles**
+  (conducta, medidas disciplinarias, contraseñas). Solo fechas/horas neutras.
 
-## Contexto
-Seguimiento del estudio de Emmanuel (4° Básico B, New Heaven High School, Antofagasta).
-Dos frentes: (A) herramientas de estudio + correos del colegio; (B) la app Apps Script
-(ver `ESTADO_PROYECTO.md`). Lo trabajado en sesiones recientes es sobre todo el frente (A).
-
-## A) Estudio de Emmanuel
-
-### Herramientas hechas (artefactos de Claude, NO están en GitHub)
-- **Carta Gantt (plan de estudio):** https://claude.ai/artifact/3uuSh2dqogRP7N74yrP4kx
-- **Geo Repaso (Mate + Tec 15-oct: perímetro, área, volumen):** https://claude.ai/artifact/M9DtT4nByP4P2RpmNpuGgc — _rehecha en Sesión 02 con el formato de Telón Arriba_: 8 lecciones, Suma los lados (11 figuras de la guía), Laboratorio de rectángulos, Cubos 3D, 8 repasos y simulacro de 19 preguntas (5 partes, incluye Tecnología) con nota 1,0–7,0.
-- **SIMCE Mate (razonamiento):** https://claude.ai/artifact/9atr5VyM5cudzgUyuRjX2W
-- **Panel de Emmanuel (traspaso visual):** https://claude.ai/artifact/KZLtafEXLVvH6GvngFk9co
-- **Telón Arriba (Lenguaje: Género dramático, prueba 14-oct):** https://claude.ai/artifact/6w9Diq5X7kDqFv1Dhs5pW1 — _creada en Sesión 02 (en curso)_: lecciones, lecturas (4 obras de las guías + 2 nuevas), juegos y simulacro de 17 preguntas con nota 1,0–7,0.
-
-_Nota: los artefactos viven en claude.ai (privados de Juan), no en el repo. Para editarlos,
-la sesión nueva debe abrir el link y republicar sobre esa misma URL._
-
-### Calendario de pruebas (al 10-oct-2026)
-| Fecha | Asignatura / Prueba | Estado |
+## Artefactos (claude.ai, no están en GitHub; editar republicando sobre la misma URL)
+| Artefacto | URL | Estado |
 |---|---|---|
-| lun 12-oct | Lenguaje — Tarea online umaximo.com (cierra 14:00) | Tarea |
-| **mié 14-oct** | **Lenguaje — Género dramático (15%)** | Confirmada |
-| **jue 15-oct** | **Matemática+Tecnología — Área, perímetro y volumen (15% + 30%)** | Confirmada |
-| ~16-oct | Lenguaje — Control del libro (pospuesto del 5-oct) | Sin fecha fija |
-| jue 22-oct | Historia — Democracia y derechos | Plan |
-| vie 23-oct | Inglés — Proyecto "Summer Camp Poster" (en grupos, empieza) | Proyecto |
-| lun 26-oct | Ciencias — La materia y sus estados | Confirmada |
-| jue 29-oct | Matemática — Simetría y transformaciones | Plan |
-| vie 30-oct | Lengua pueblos originarios — Mapuches | Plan |
-| 4–5 nov | SIMCE oficial | Evento |
-| 16-nov | Música — Metalófono (navideña) | Plan |
-| 18-nov | Lenguaje — Género narrativo | Plan |
-| 20-nov | Inglés — Personajes de fantasía + adjetivos | Plan |
-| 23-nov | Artes visuales — Maqueta rapa nui | Plan |
-| 24-nov | Matemática — Ecuaciones e inecuaciones | Plan |
-| 26-nov | Historia — Organización política en Chile | Plan |
+| Carta Gantt (plan de estudio) | https://claude.ai/artifact/3uuSh2dqogRP7N74yrP4kx | v15. Oculta sola lo anterior a hoy. Links a cada app. |
+| Telón Arriba (Lenguaje, género dramático) | https://claude.ai/artifact/6w9Diq5X7kDqFv1Dhs5pW1 | Prueba rendida lun 19-oct. Simulacro 22 preg (2 obras guía + 1 nueva). |
+| Geo Repaso (Mate+Tec: perímetro, área, volumen) | https://claude.ai/artifact/M9DtT4nByP4P2RpmNpuGgc | Rehecha con guías de la profe. Prueba rendida mié 14-oct. |
+| Lab de la Materia (Ciencias: estados, masa, volumen) | https://claude.ai/artifact/N8cvn7UxkCGgotfYPkqNaN | Prueba lun 26-oct (no se sabe resultado). |
+| Simulador Asistente Classroom (P2) | https://claude.ai/artifact/9ajdnLmVSR9GDkSW7QAnaQ | Demo del flujo Classroom→Drive→IA→hoja. |
+| SIMCE Mate / Panel de Emmanuel | ver sesión 01 | Sin cambios. |
 
-### Acceso a correos y material
-- **Correos (OK):** conector Gmail en la cuenta de Emmanuel (`emmanuel.arias@newheavenhs.cl`).
-  De ahí se leen los anuncios de Classroom y se actualiza la Gantt.
-- **Material/PDF de la profe (parcial):** se puede abrir un documento si Juan pega el
-  **link directo** de Drive. Falta poder listar toda la carpeta solo.
-- **Drive conectado hoy:** el de Juan (`jpa.arias94@gmail.com`). Conectar el Drive de
-  Emmanuel quedó bloqueado por permisos del colegio (administrador). Plan B: links directos.
+Formato estándar de las apps de estudio (usar igual para las próximas): 1 Aprende (lecciones con
+pregunta), 2 Entiende (interactivos), 3 Repasa (juegos con explicación), 4 Simulacro (sin ayuda,
+cronómetro, nota 1,0–7,0 exigencia 60%, % por habilidad, revisión). Basado en material de la profe.
+Probar siempre con Playwright (todo bien = 7,0; todo mal = 1,0) antes de publicar.
 
-## B) App Apps Script
-Ver `ESTADO_PROYECTO.md` (P1 fechas ✅, P2 documentos backend ✅ + UI pendiente, P3 juegos pendiente)
-y `ARRANQUE_COWORK.md` (casos de prueba del agente).
+## Fechas clave (al 30-oct)
+- **Vie 30-oct:** Interculturalidad — evaluación pueblo mapuche (fecha del PLAN, sin correo que la
+  confirme; lecturas: leyenda Lican Ray págs 208-209 y "Lágrimas de amor: la piedra cruz" 206-207 del
+  libro de Lenguaje; organización social y vocabulario). Sombrero loco de Australia. Segunda entrevista
+  en el colegio (hora sin confirmar, 08:00–13:30).
+- **Sáb 31-oct:** cierra último refuerzo umaximo (Lenguaje y Mate).
+- **Lun 2-nov:** premiación umaximo. **4–5 nov:** SIMCE oficial.
+- Plan sin confirmar: Simetría (Mate), Música metalófono 16-nov, Género narrativo 18-nov, Inglés
+  fantasía 20-nov, Maqueta rapa nui 23-nov, Ecuaciones 24-nov (ya empezaron ecuaciones 23-oct),
+  Historia organización política 26-nov.
 
-## PENDIENTES (por dónde seguir)
-1. **Confirmar prueba de Mate:** estaba para el 8-oct y la profe la anunció para el
-   **jueves 15** (misma ponderación). Confirmar con Juan si la del 8 se tomó o se corrió.
-2. **Armar app de estudio de "Género dramático" (14-oct)** — prueba más próxima; idealmente
-   con el material real de la profe (Juan pega el link de Drive de Lenguaje).
-3. **Conectar Drive de Emmanuel** (bloqueado por permisos; reintentar o seguir con links).
-4. **Mantener la Gantt al día** al llegar correos nuevos.
-5. **App:** UI de P2 (mostrar resumen + descarga directa) y empezar P3 juegos.
+## Lo hecho en la sesión (resumen)
+- Lectura de correos del colegio y del WhatsApp de apoderados (Juan los pasa por foto); la Gantt se
+  actualizó 15 veces. Cambio importante que vino solo por WhatsApp: Lenguaje pasó del 14 al 19-oct.
+- 3 apps de estudio nuevas/rehechas (Telón Arriba, Geo Repaso, Lab de la Materia) + arreglo de la
+  cara trasera de las tarjetas (choque de clase CSS `.back`).
+- Diagnóstico del asistente de Classroom (P2): la planilla NEW HEAVENS (dueña: cuenta de Emmanuel) está
+  compartida con Juan y se lee por el Drive de Juan. La descarga de Classroom parece detenida desde fines
+  de agosto; el activador de resumen sí corre pero falló el 21-oct (DEADLINE_EXCEEDED). La carpeta
+  "EMMANUEL - Materiales" NO está compartida con Juan.
+- Hallazgo de código: `examenParaDocumento_` ignora palabras de ≤4 letras ("área") → documentos sin
+  enlazar a su prueba. Propuesta: usar >3 letras (no aplicado aún).
+- ⚠️ Seguridad: clave Gemini visible en hoja Config de la planilla compartida; el colegio envió por
+  correo contraseñas en texto plano (Full College y Gmail de Emmanuel). Se recomendó cambiarlas.
+- Contexto familiar sensible (28–30 oct): medidas del colegio y entrevistas; detalle solo en los correos.
 
-## Correos nuevos procesados en esta sesión (9-oct-2026)
-- Orientación: confirma Lenguaje dramático 14-oct (15%) y Mate+Tec jueves 15 (15%+30%).
-- Ciencias: prueba el lunes 26-oct (materia, masa, volumen, estados).
-- Inglés: proyecto "Summer Camp Poster" en grupos, empieza vie 23-oct.
-- Interculturalidad: leyenda mapuche "Lágrimas de amor: la piedra cruz" (info, sin prueba).
-
-## Correos procesados en Sesión 02 (13-oct-2026) — Gantt actualizada
-- Mate: resultados ensayo n°7 (mínimo 220 / máx. 400). Actividad umaximo hasta **dom 18-oct**. **Llevar la guía de la última clase el mié 14** (revisión antes de la prueba del jue 15).
-- Lenguaje: repaso de género dramático el 13-oct (resumen en Classroom). Remedial umaximo "Refuerzo SIMCE n°7" hasta **dom 25-oct**.
-- Historia: vieron "encuentro de dos mundos" (12 de octubre); presentación y video en Classroom. Prueba 22-oct sigue sin confirmar.
-- Prueba de Mate del 8/9-oct: Juan iba a confirmar con Emmanuel (se dejó el jue 15 según correo de Orientación).
-- 14-oct: Lenguaje subió presentación "origen del teatro y su evolución" (cine mudo, teatro musical). Sin cambios de fechas. Gantt v8 publicada.
-- 14-oct (WhatsApp apoderados, sin correo del colegio): **Lenguaje dramático movida a lun 19-oct** (no se tomó el 14). Mate: WhatsApp dice mié 14 vs correo jue 15 → POR CONFIRMAR. Vie 16 sin clases. Jue 15 regalo miss. Mié 21 premiación mejor compañero. Vie 23 Inglés: llevar 1 pliego cartulina clara + imágenes de campamentos y elementos de seguridad (grupal). Mar 27 English Week. Vie 30 sombrero loco de Australia (reciclado). Control del libro sin fecha. Gantt v9 y Telón Arriba (fecha 19-oct) publicadas.
-- 14-oct: **Mate + Tec RENDIDA el mié 14** (confirmado por Juan). Gantt v10 y Geo Repaso con la fecha real.
-- 18-oct: sin correos nuevos del colegio. Gantt v11: ahora oculta automáticamente todo lo anterior a hoy (el eje parte desde ayer y se ajusta solo).
-- 20-oct: creada **Lab de la Materia** (Ciencias, prueba lun 26-oct): https://claude.ai/artifact/N8cvn7UxkCGgotfYPkqNaN — material de la profe (pptx Estados de la Materia, resumen estados, resumen volumen). 8 lecciones, simulador de partículas (recipiente/émbolo/calor), jarro graduado, completa la tabla, 6 repasos, tarjetas y simulacro de 21 preguntas (5 partes) con nota 1,0–7,0. "Masa" no venía en el material: se usó la definición estándar (balanza, g/kg).
-- 23-oct: **Asistente Classroom (P2)**. La planilla NEW HEAVENS (de Emmanuel) está compartida con Juan y se lee por el Drive de Juan; el asistente está DETENIDO desde fines de agosto (ultima_lectura 30-jul, último Agente 2-sep, Documentos hasta 26-ago). La carpeta "EMMANUEL - Materiales" NO está compartida con Juan. Pasos pedidos a Juan: reactivar (menú "📎 Descargar documentos" + activador 6 h) y compartir la carpeta con jpa.arias94@gmail.com. ⚠️ Clave Gemini a la vista en hoja Config → recomendar clave nueva en Propiedades del script. Hallazgo: examenParaDocumento_ ignora palabras de ≤4 letras ("área") → area.pdf queda sin prueba; propuesta de arreglo (>3 letras). Simulación publicada: https://claude.ai/artifact/9ajdnLmVSR9GDkSW7QAnaQ
-- 25-oct (correos 21–23 oct): entrevista apoderado con profe jefe **jue 29-oct 08:30** presencial (confirmar en el correo); último refuerzo umaximo Lenguaje+Mate hasta **sáb 31-oct**; premiación umaximo lun 2-nov (correo dice "octubre"); "La cabaña en el árbol" NO se evalúa; Lenguaje: lecturas del libro "El castillo aéreo del brujo" (56-57) y "La noche" (177-178); Mate: empezaron ecuaciones (incógnita X). Profe pide conseguir contenido tras ausencias (faltó material del trabajo grupal del martes). **Corrección**: el activador de resumirDocumentosPendientes SÍ corre, pero falló el 21-oct (DEADLINE_EXCEEDED). Gantt v14 (ahora compartida con link: no poner datos sensibles).
-- 29-oct (correos 26–28 oct): Emmanuel no asiste 28 y 29-oct (medida del colegio; detalle en correos, NO poner en la Gantt pública). Entrevista profe jefe se mantiene jue 29 08:30 (asiste la mamá). Segunda entrevista vie 30 (Convivencia, ofrecen 08:00–13:30, hora sin confirmar). El colegio envió credenciales por correo en texto plano (Full College y Gmail de Emmanuel): recomendar cambiarlas. Sin anuncios nuevos de Classroom desde el 23-oct. Gantt v15.
+## Pendientes para la próxima sesión
+1. Confirmar con Juan: ¿evaluación mapuche fue el 30-oct? ¿cómo le fue en Ciencias (26-oct)?
+2. Si Juan manda material (fotos págs 206-209 o guía), armar app corta de Interculturalidad (mapuche).
+3. Preparar SIMCE (4–5 nov): reutilizar SIMCE Mate + Telón Arriba / comprensión lectora.
+4. App Apps Script: Juan debe (a) reactivar "📎 Descargar documentos de Classroom" y revisar
+   activadores, (b) compartir "EMMANUEL - Materiales" con jpa.arias94@gmail.com, (c) clave Gemini nueva
+   en Propiedades del script. Luego: aplicar arreglo de `examenParaDocumento_` y leer clave desde
+   Propiedades (pedir OK antes).
+5. Mantener la Gantt al día (correos + WhatsApp). Archivo fuente local se pierde entre contenedores:
+   para editar, leer el artefacto con Artifact `read` y republicar sobre la misma URL.
